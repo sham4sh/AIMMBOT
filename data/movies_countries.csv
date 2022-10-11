@@ -1,146 +1,286 @@
 ,movieId,imdbId,countries
-0,1,114709,United States
-1,2,113497,United States
-2,3,113228,United States
-3,4,114885,United States
-4,5,113041,United States
-5,6,113277,United States
-6,7,114319,Germany
-7,7,114319,United States
-8,8,112302,United States
-9,9,114576,United States
-10,10,113189,United Kingdom
-11,10,113189,United States
-12,11,112346,United States
-13,12,112896,France
-14,12,112896,United States
-15,13,112453,United States
-16,13,112453,United Kingdom
-17,14,113987,United States
-18,15,112760,United States
-19,15,112760,Italy
-20,15,112760,Germany
-21,15,112760,France
-22,16,112641,United States
-23,16,112641,France
-24,17,114388,United States
-25,17,114388,United Kingdom
-26,18,113101,United States
-27,19,112281,United States
-28,20,113845,United States
-29,21,113161,United States
-30,22,112722,United States
-31,23,112401,France
-32,23,112401,United States
-33,24,114168,United States
-34,25,113627,United States
-35,26,114057,United States
-36,26,114057,United Kingdom
-37,27,114011,United States
-38,28,114117,United Kingdom
-39,28,114117,United States
-40,28,114117,France
-41,29,112682,France
-42,29,112682,Germany
-43,29,112682,Spain
-44,29,112682,Belgium
-45,29,112682,United States
-46,30,115012,France
-47,30,115012,China
-48,31,112792,United States
-49,32,114746,United States
-50,34,112431,Australia
-51,34,112431,United States
-52,36,112818,United Kingdom
-53,36,112818,United States
-54,38,113442,United States
-55,39,112697,United States
-56,40,112749,South Africa
-57,40,112749,United States
-58,41,114279,United Kingdom
-59,41,114279,United States
-60,42,112819,United States
-61,43,114272,United States
-62,43,114272,United Kingdom
-63,44,113855,United States
-64,45,114681,United States
-65,45,114681,United Kingdom
-66,45,114681,Canada
-67,46,113347,United States
-68,47,114369,United States
-69,48,114148,United States
-70,49,114916,Canada
-71,50,114814,United States
-72,50,114814,Germany
-73,52,113819,United States
-74,53,110299,Italy
-75,53,110299,France
-76,53,110299,Switzerland
-77,53,110299,Austria
-78,54,112499,United States
-79,55,113158,France
-80,55,113158,United States
-81,57,113321,United States
-82,58,110877,Italy
-83,58,110877,France
-84,58,110877,Belgium
-85,60,113419,United States
-86,61,116260,United States
-87,62,113862,United States
-88,63,116126,United States
-89,64,118002,United States
-90,65,115683,United States
-91,66,116839,United States
-92,68,113149,France
-93,69,113118,United States
-94,70,116367,United States
-95,70,116367,Mexico
-96,71,113010,United States
-97,72,113537,United States
-98,73,113828,France
-99,74,115644,United States
-100,75,115676,United States
-101,76,114367,Canada
-102,76,114367,Japan
-103,77,113973,Germany
-104,77,113973,United States
-105,78,112744,United States
-106,79,116731,United States
-107,80,112445,Iran
-108,81,114660,United States
-109,82,112379,Netherlands
-110,82,112379,Belgium
-111,82,112379,United Kingdom
-112,82,112379,France
-113,83,114039,United States
-114,85,112365,United Kingdom
-115,85,112365,United States
-116,86,118158,United States
-117,86,118158,United Kingdom
-118,87,116151,United States
-119,88,115697,United States
-120,89,113972,United States
-121,92,117002,United States
-122,92,117002,United Kingdom
-123,93,114825,United States
-124,94,115639,United States
-125,95,115759,United States
-126,96,113403,United Kingdom
-127,97,113247,France
-128,97,113247,United States
-129,99,113283,United Kingdom
-130,99,113283,Germany
-131,99,113283,United States
-132,99,113283,Canada
-133,100,115907,United States
-134,101,115734,United States
-135,102,117102,United States
-136,103,118040,United States
-137,104,116483,United States
-138,105,112579,United States
-139,106,110251,Germany
-140,107,117110,United States
-141,108,112646,United States
-142,110,112573,United States
-143,111,75314,United States
-144,112,0113326,Hong Kong
+0,53894,386032,United States
+1,784,115798,United States
+2,5348,278823,United States
+3,4825,240419,Argentina
+4,4825,240419,France
+5,4825,240419,Spain
+6,4825,240419,Japan
+7,1626,119123,United States
+8,33558,337721,Canada
+9,1926,19729,United States
+10,7879,300274,United States
+11,2724,163187,United States
+12,6755,281686,United States
+13,540,108162,United States
+14,8459,41452,United States
+15,1464,116922,France
+16,1464,116922,United States
+17,724,115963,United States
+18,319,111149,United Kingdom
+19,7477,160184,Germany
+20,7477,160184,United States
+21,6067,160611,Ireland
+22,6067,160611,Germany
+23,6067,160611,United Kingdom
+24,6067,160611,United States
+25,6239,52948,United States
+26,2179,65112,United States
+27,49688,46889,United Kingdom
+28,7647,105017,United States
+29,96737,1343727,United Kingdom
+30,96737,1343727,South Africa
+31,96737,1343727,India
+32,5991,299658,United States
+33,5991,299658,Germany
+34,5991,299658,Canada
+35,5991,299658,United Kingdom
+36,59131,845955,United States
+37,147328,80263,Soviet Union
+38,2961,160916,United States
+39,34523,406650,United States
+40,34523,406650,Germany
+41,3155,166485,United States
+42,4202,68617,United States
+43,4404,16847,Germany
+44,140174,3170832,Ireland
+45,140174,3170832,Canada
+46,140174,3170832,United Kingdom
+47,140174,3170832,United States
+48,5379,247199,United States
+49,7328,64793,Sweden
+50,74075,1185266,Canada
+51,74075,1185266,United States
+52,81537,1231583,United States
+53,133419,2848292,United States
+54,27829,375073,United States
+55,68194,1226271,United Kingdom
+56,5999,119273,Canada
+57,5999,119273,Germany
+58,45074,405469,Canada
+59,45074,405469,United States
+60,2164,94077,United States
+61,8385,55100,United States
+62,2812,160401,United States
+63,107412,60584,Soviet Union
+64,31049,98042,United States
+65,173235,6039532,United Kingdom
+66,173235,6039532,Canada
+67,173235,6039532,Japan
+68,1956,81283,United States
+69,128991,3723996,South Korea
+70,72378,1190080,United States
+71,7333,35753,France
+72,115617,2245084,United States
+73,4666,98343,United States
+74,94262,52587,United States
+75,5333,47892,France
+76,34018,31060,United States
+77,122882,1392190,Australia
+78,31804,403358,Russia
+79,31804,403358,United States
+80,2131,77711,West Germany
+81,2131,77711,United Kingdom
+82,272,110428,United Kingdom
+83,272,110428,United States
+84,31038,90037,United Kingdom
+85,31038,90037,United States
+86,5956,217505,Italy
+87,5956,217505,United States
+88,90245,86907,Japan
+89,1080,79470,United Kingdom
+90,2881,150377,United States
+91,2881,150377,Germany
+92,2881,150377,Canada
+93,55080,476964,United States
+94,55080,476964,Australia
+95,42176,66498,Czechoslovakia
+96,78893,938283,United States
+97,1734,119590,Belgium
+98,1734,119590,France
+99,1734,119590,United Kingdom
+100,1529,119809,United States
+101,1529,119809,France
+102,1416,116250,United States
+103,7115,73582,Italy
+104,2115,87469,United States
+105,1170,112483,United States
+106,52281,462322,United States
+107,52281,462322,Canada
+108,160718,5613056,United States
+109,2080,48280,United States
+110,71518,1172233,United States
+111,122896,1790809,United States
+112,122896,1790809,Australia
+113,122896,1790809,United Kingdom
+114,122896,1790809,Canada
+115,80454,1428453,Finland
+116,4581,97142,United States
+117,91890,1007029,United Kingdom
+118,91890,1007029,France
+119,1958,86425,United States
+120,158388,77278,United States
+121,98799,1979172,United Kingdom
+122,3102,89360,United States
+123,27368,250223,France
+124,27368,250223,Germany
+125,101973,1433811,United States
+126,948,49261,United States
+127,3710,94612,United States
+128,3758,97100,United States
+129,3758,97100,United Kingdom
+130,113280,1967697,United States
+131,5321,253840,Italy
+132,5321,253840,United Kingdom
+133,5321,253840,Germany
+134,136556,1980162,United States
+135,349,109444,United States
+136,84952,1590089,Japan
+137,1718,120222,Canada
+138,1393,116695,United States
+139,1804,120769,United States
+140,2884,129884,Canada
+141,2884,129884,United States
+142,34359,60453,United Kingdom
+143,54910,437857,United States
+144,8983,385004,China
+145,8983,385004,Hong Kong
+146,182823,5519340,United States
+147,3822,144201,France
+148,79224,1155076,United States
+149,79224,1155076,China
+150,2389,155975,United States
+151,3254,108525,United States
+152,3269,104291,United States
+153,107449,1292569,United States
+154,1495,120389,Japan
+155,1495,120389,United States
+156,37733,399146,United States
+157,37733,399146,Canada
+158,32160,25919,United States
+159,131578,107930,Australia
+160,52867,458364,United States
+161,736,117998,United States
+162,31664,184526,Hong Kong
+163,31664,184526,Taiwan
+164,114126,430916,United States
+165,172013,3397160,Austria
+166,172013,3397160,Germany
+167,172013,3397160,France
+168,95873,1839492,United States
+169,37720,404032,United States
+170,62336,279077,Japan
+171,147662,64265,Hong Kong
+172,48883,853096,United Kingdom
+173,106441,816442,Germany
+174,106441,816442,United States
+175,1188,105488,Australia
+176,1188,105488,United Kingdom
+177,8410,47542,United States
+178,3213,106364,United States
+179,1322,103678,United States
+180,175303,1396484,United States
+181,175303,1396484,Canada
+182,1960,93389,United Kingdom
+183,1960,93389,China
+184,1960,93389,Italy
+185,1960,93389,France
+186,1960,93389,United States
+187,1679,118836,United States
+188,43871,408345,United States
+189,171751,374887,India
+190,3702,79501,Australia
+191,4585,97235,United States
+192,128512,3622592,United States
+193,4445,163862,United States
+194,7015,102598,United States
+195,50068,498380,United States
+196,108601,1714833,Australia
+197,98491,2388725,United States
+198,892,117991,Ireland
+199,892,117991,United Kingdom
+200,5110,247745,United States
+201,72165,450405,United States
+202,2406,88011,Mexico
+203,2406,88011,United States
+204,4622,97790,United States
+205,254,113463,France
+206,254,113463,United States
+207,45668,410297,United States
+208,315,111255,United States
+209,1350,75005,United Kingdom
+210,1350,75005,United States
+211,2542,120735,United Kingdom
+212,170907,3762912,United States
+213,106438,2431286,United Kingdom
+214,106438,2431286,France
+215,106438,2431286,United States
+216,61240,1139797,Sweden
+217,8010,105159,Australia
+218,8010,105159,France
+219,8010,105159,United States
+220,178615,3185602,United States
+221,85316,72410,United States
+222,54121,42286,United States
+223,7087,87892,United Kingdom
+224,7087,87892,United States
+225,102684,1602613,Denmark
+226,102684,1602613,France
+227,102684,1602613,United States
+228,102684,1602613,Sweden
+229,102684,1602613,Belgium
+230,1769,120008,United States
+231,58105,416236,United States
+232,180095,2543472,United States
+233,180095,2543472,Hong Kong
+234,180095,2543472,Canada
+235,161582,2582782,United States
+236,8327,330229,Japan
+237,86290,1179947,United Kingdom
+238,111785,1079372,United States
+239,1468,118750,United States
+240,4926,209037,Belgium
+241,4926,209037,Netherlands
+242,4926,209037,France
+243,26693,99864,United States
+244,26693,99864,Canada
+245,3648,50095,United Kingdom
+246,63276,1016290,Japan
+247,7260,345551,United States
+248,62434,1007028,United States
+249,157340,1985949,Finland
+250,157340,1985949,United States
+251,2205,33922,United States
+252,107565,2987732,Germany
+253,4881,243133,United States
+254,4881,243133,United Kingdom
+255,3629,15864,United States
+256,71282,1286537,United States
+257,55290,452623,United States
+258,76143,1181927,Austria
+259,1731,119718,United States
+260,84637,377981,United Kingdom
+261,84637,377981,Canada
+262,84637,377981,United States
+263,350,109446,United States
+264,3083,185125,Spain
+265,3083,185125,France
+266,858,68646,United States
+267,6330,274711,Germany
+268,6330,274711,United States
+269,3550,85701,United Kingdom
+270,105504,1535109,United States
+271,27074,145600,United States
+272,3752,183505,United States
+273,3441,87985,United States
+274,5134,291341,United Kingdom
+275,5134,291341,United States
+276,1726,119925,United States
+277,1422,119731,United States
+278,3554,199725,United States
+279,91981,1726738,China
+280,6565,329575,United States
+281,122890,0803096,China
+282,122890,0803096,United States
+283,122890,0803096,Canada
+284,122890,0803096,Japan
