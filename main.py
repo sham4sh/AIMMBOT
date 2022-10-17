@@ -2,7 +2,6 @@
 
 import sys
 from PyQt5.QtWidgets import (QApplication, QLabel, QMainWindow, QStatusBar, QToolBar, QLineEdit, QGridLayout, QWidget, QPushButton, QMessageBox)
-from sqlalchemy import false
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import auth
@@ -64,7 +63,7 @@ class LoginWindow(QWidget):
 		layout.addWidget(label_password, 1, 0)
 		layout.addWidget(self.lineEdit_password, 1, 1)
 
-		button_login = QPushButton('Register')
+		button_login = QPushButton('Login')
 		button_login.clicked.connect(self.check_password)
 		layout.addWidget(button_login, 2, 0, 1, 2)
 		layout.setRowMinimumHeight(2, 75)
@@ -108,7 +107,7 @@ class RegisterWindow(QWidget):
 		layout.addWidget(label_password, 1, 0)
 		layout.addWidget(self.lineEdit_password, 1, 1)
 
-		button_login = QPushButton('Login')
+		button_login = QPushButton('Register')
 		button_login.clicked.connect(self.register_user)
 		layout.addWidget(button_login, 2, 0, 1, 2)
 		layout.setRowMinimumHeight(2, 75)
@@ -133,6 +132,7 @@ class RegisterWindow(QWidget):
     
 if __name__ == "__main__":
     app = QApplication([])
+    app.setStyle('Oxygen')
     window = MainWindow()
     window.show()
     sys.exit(app.exec())
