@@ -1,14 +1,17 @@
 
+#Functions to interact with user database
+
+import sys
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import auth
-cred = credentials.Certificate("AIMMBOT/aimmbot-ea206-firebase-adminsdk-wb137-2f8132fd73.json")
+cred = credentials.Certificate("aimmbot-ea206-firebase-adminsdk-wb137-2f8132fd73.json")
 firebase_admin.initialize_app(cred)
 
 # https://firebase.google.com/docs/reference/admin/python/firebase_admin.auth#firebase_admin.auth.UserRecord 
 
 # THE USER BELOW EXISTS IN THE DB 
-email1 = 'test@gmail.com'#input("Enter Email: ")
+email1 = 'joshuashamash@gmail.com'#input("Enter Email: ")
 password1 = '123456' #input("Enter Password: ")
 
 def createUserCred(email, password): # can create with UID 
@@ -41,7 +44,7 @@ def checkUserCred(email,password):
     #except:
     #    print('Invalid email or password')
 
-createUserCred(email1,password1)
+#createUserCred(email1,password1)
 
 #checkUserCred(email1,password1)
 
