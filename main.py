@@ -1,6 +1,12 @@
 # Main file. Main page and all pop up windows are defined here.
 
+from asyncio.windows_events import NULL
+from sqlite3 import Cursor
 import sys
+import requests
+import json
+import signin
+import pprint
 from PyQt5.QtWidgets import (QApplication, QLabel, QMainWindow, QStatusBar, QToolBar, QLineEdit, QGridLayout, QWidget, QPushButton, QMessageBox)
 import firebase_admin
 from firebase_admin import credentials
@@ -64,26 +70,36 @@ class LoginWindow(QWidget):
 		layout.addWidget(self.lineEdit_password, 1, 1)
 
 		button_login = QPushButton('Login')
-		button_login.clicked.connect(self.check_password)
+		button_login.clicked.connect(self.updateUser)
 		layout.addWidget(button_login, 2, 0, 1, 2)
 		layout.setRowMinimumHeight(2, 75)
 
+		button_exit = QPushButton('Return')
+		button_exit.clicked.connect(window.show)
+		button_exit.clicked.connect(self.hide)
+		layout.addWidget(button_exit, 3, 0, 1, 2)
+
 		self.setLayout(layout)
 
-	def check_password(self):
+	def updateUser(self):
 
+		currentUser = signin.sign_in_with_email_and_password(email=self.lineEdit_username.text(), password=self.lineEdit_password.text())
+		
 		msg = QMessageBox()
-
-		if self.lineEdit_username.text() == 'Username' and self.lineEdit_password.text() == '000':
-			msg.setText('Success')
+		try:
+			returnStr = currentUser['error']['message']
+			if(returnStr == 'INVALID_PASSWORD'):
+				returnStr = "Invalid Password"
+			if(returnStr == 'INVALID_EMAIL'):
+				returnStr = "Email Not Recognized"
+			msg.setText(returnStr)
+			msg.exec()
+		except:
+			msg.setText("Logged In Succesfully")
 			msg.exec_()
 			msg.hide()
 			self.hide()
 			window.show()
-		else:
-			msg.setText('Incorrect Password')
-			msg.exec_()
-
 #Window that allows new users to register via Firebase
 class RegisterWindow(QWidget):
 
@@ -107,10 +123,15 @@ class RegisterWindow(QWidget):
 		layout.addWidget(label_password, 1, 0)
 		layout.addWidget(self.lineEdit_password, 1, 1)
 
-		button_login = QPushButton('Register')
-		button_login.clicked.connect(self.register_user)
-		layout.addWidget(button_login, 2, 0, 1, 2)
+		button_reg = QPushButton('Register')
+		button_reg.clicked.connect(self.register_user)
+		layout.addWidget(button_reg, 2, 0, 1, 2)
 		layout.setRowMinimumHeight(2, 75)
+
+		button_exit = QPushButton('Return')
+		button_exit.clicked.connect(window.show)
+		button_exit.clicked.connect(self.hide)
+		layout.addWidget(button_exit, 3, 0, 1, 2)
 
 		self.setLayout(layout)
 
@@ -131,6 +152,7 @@ class RegisterWindow(QWidget):
 
     
 if __name__ == "__main__":
+    currentUser = NULL
     app = QApplication([])
     app.setStyle('Oxygen')
     window = MainWindow()
