@@ -1,0 +1,161 @@
+Evaluating RMSE, MAE of algorithm SVD on 5 split(s).
+
+                  Fold 1  Fold 2  Fold 3  Fold 4  Fold 5  Mean    Std     
+RMSE (testset)    0.8653  0.8697  0.8752  0.8722  0.8816  0.8728  0.0055  
+MAE (testset)     0.6663  0.6696  0.6721  0.6722  0.6753  0.6711  0.0030  
+Fit time          1.11    1.15    1.16    1.16    1.14    1.14    0.02    
+Test time         0.21    0.20    0.22    0.17    0.21    0.20    0.02    
+test_rmse : [0.86529535 0.86969911 0.87515741 0.87223992 0.8816488 ]
+test_mae : [0.66634071 0.66956337 0.67210351 0.67215219 0.67530943]
+fit_time : (1.1112682819366455, 1.1473190784454346, 1.1584579944610596, 1.1596038341522217, 1.1412720680236816)
+test_time : (0.20533227920532227, 0.20330500602722168, 0.22231698036193848, 0.16500186920166016, 0.2099900245666504)
+Evaluating RMSE, MAE of algorithm SlopeOne on 5 split(s).
+
+                  Fold 1  Fold 2  Fold 3  Fold 4  Fold 5  Mean    Std     
+RMSE (testset)    0.9081  0.9053  0.8953  0.9071  0.8926  0.9017  0.0064  
+MAE (testset)     0.6928  0.6927  0.6840  0.6905  0.6823  0.6884  0.0044  
+Fit time          5.80    6.72    4.48    4.44    4.44    5.18    0.93    
+Test time         6.34    6.14    6.07    6.13    6.10    6.16    0.09    
+test_rmse : [0.90808999 0.9052908  0.89533133 0.90710385 0.89263267]
+test_mae : [0.6928131  0.6926669  0.68400264 0.69047788 0.68226589]
+fit_time : (5.795192003250122, 6.724224090576172, 4.480625152587891, 4.440814018249512, 4.439944744110107)
+test_time : (6.340591192245483, 6.139081954956055, 6.0723557472229, 6.129143953323364, 6.101832866668701)
+Evaluating RMSE, MAE of algorithm NMF on 5 split(s).
+
+                  Fold 1  Fold 2  Fold 3  Fold 4  Fold 5  Mean    Std     
+RMSE (testset)    0.9236  0.9229  0.9165  0.9265  0.9225  0.9224  0.0033  
+MAE (testset)     0.7075  0.7074  0.7010  0.7085  0.7046  0.7058  0.0027  
+Fit time          2.58    2.58    2.58    2.58    2.63    2.59    0.02    
+Test time         0.17    0.18    0.18    0.18    0.18    0.18    0.00    
+test_rmse : [0.92363955 0.92288876 0.91653769 0.92648584 0.92250505]
+test_mae : [0.70749463 0.70735524 0.70099526 0.70846241 0.70456163]
+fit_time : (2.575859785079956, 2.5774312019348145, 2.5762250423431396, 2.577772855758667, 2.634943962097168)
+test_time : (0.17363810539245605, 0.18249988555908203, 0.17776989936828613, 0.17614197731018066, 0.1791858673095703)
+Evaluating RMSE, MAE of algorithm NormalPredictor on 5 split(s).
+
+                  Fold 1  Fold 2  Fold 3  Fold 4  Fold 5  Mean    Std     
+RMSE (testset)    1.4196  1.4342  1.4245  1.4301  1.4222  1.4261  0.0053  
+MAE (testset)     1.1332  1.1438  1.1374  1.1370  1.1329  1.1369  0.0039  
+Fit time          0.11    0.13    0.13    0.13    0.13    0.13    0.01    
+Test time         0.14    0.15    0.16    0.15    0.15    0.15    0.00    
+test_rmse : [1.41960139 1.43420073 1.42448347 1.43013405 1.4222449 ]
+test_mae : [1.13321401 1.14384166 1.13739869 1.13699731 1.1329244 ]
+fit_time : (0.11139607429504395, 0.13004183769226074, 0.12717485427856445, 0.1294231414794922, 0.13017702102661133)
+test_time : (0.14475488662719727, 0.14571285247802734, 0.15694475173950195, 0.15070080757141113, 0.1520528793334961)
+Estimating biases using als...
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Estimating biases using als...
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Estimating biases using als...
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Estimating biases using als...
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Estimating biases using als...
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Evaluating RMSE, MAE of algorithm KNNBaseline on 5 split(s).
+
+                  Fold 1  Fold 2  Fold 3  Fold 4  Fold 5  Mean    Std     
+RMSE (testset)    0.8676  0.8755  0.8745  0.8770  0.8794  0.8748  0.0040  
+MAE (testset)     0.6632  0.6706  0.6700  0.6676  0.6711  0.6685  0.0029  
+Fit time          0.48    0.70    0.58    0.61    0.53    0.58    0.07    
+Test time         2.27    2.19    2.12    2.06    1.95    2.12    0.11    
+test_rmse : [0.86762967 0.87548447 0.8744741  0.87702614 0.87944756]
+test_mae : [0.6632195  0.67056388 0.67001666 0.66756721 0.67113739]
+fit_time : (0.48308491706848145, 0.6966369152069092, 0.5759696960449219, 0.613562822341919, 0.5289568901062012)
+test_time : (2.270331859588623, 2.1923420429229736, 2.117568016052246, 2.0642619132995605, 1.9456813335418701)
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Evaluating RMSE, MAE of algorithm KNNBasic on 5 split(s).
+
+                  Fold 1  Fold 2  Fold 3  Fold 4  Fold 5  Mean    Std     
+RMSE (testset)    0.9490  0.9472  0.9492  0.9489  0.9449  0.9479  0.0017  
+MAE (testset)     0.7257  0.7263  0.7270  0.7299  0.7246  0.7267  0.0018  
+Fit time          0.13    0.17    0.16    0.17    0.16    0.16    0.01    
+Test time         1.49    1.51    1.56    1.49    1.52    1.51    0.02    
+test_rmse : [0.94904243 0.94719437 0.94924907 0.94892721 0.94489995]
+test_mae : [0.72566699 0.72634168 0.72695796 0.72989856 0.72460377]
+fit_time : (0.1349351406097412, 0.1669449806213379, 0.16146397590637207, 0.17000222206115723, 0.161210298538208)
+test_time : (1.494197130203247, 1.506667137145996, 1.5573019981384277, 1.4938037395477295, 1.522428274154663)
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Evaluating RMSE, MAE of algorithm KNNWithMeans on 5 split(s).
+
+                  Fold 1  Fold 2  Fold 3  Fold 4  Fold 5  Mean    Std     
+RMSE (testset)    0.8983  0.8963  0.8951  0.8960  0.9003  0.8972  0.0019  
+MAE (testset)     0.6879  0.6855  0.6831  0.6850  0.6862  0.6855  0.0016  
+Fit time          0.19    0.20    0.19    0.22    0.22    0.20    0.01    
+Test time         1.64    1.62    1.70    1.65    1.64    1.65    0.03    
+test_rmse : [0.89830823 0.89632204 0.8951151  0.89600943 0.90026538]
+test_mae : [0.68790684 0.68551209 0.68310914 0.6850079  0.68615616]
+fit_time : (0.19140100479125977, 0.20415902137756348, 0.1946418285369873, 0.21857810020446777, 0.21575713157653809)
+test_time : (1.6410231590270996, 1.615995168685913, 1.6985552310943604, 1.6503009796142578, 1.6438028812408447)
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Computing the msd similarity matrix...
+Done computing similarity matrix.
+Evaluating RMSE, MAE of algorithm KNNWithZScore on 5 split(s).
+
+                  Fold 1  Fold 2  Fold 3  Fold 4  Fold 5  Mean    Std     
+RMSE (testset)    0.9039  0.8934  0.8975  0.8983  0.8931  0.8972  0.0039  
+MAE (testset)     0.6856  0.6742  0.6847  0.6811  0.6774  0.6806  0.0043  
+Fit time          0.25    0.28    0.32    0.27    0.27    0.28    0.02    
+Test time         1.77    1.77    1.77    1.76    1.78    1.77    0.01    
+test_rmse : [0.90389584 0.89340889 0.89753571 0.89827276 0.89310559]
+test_mae : [0.68559515 0.67416713 0.68474549 0.68112633 0.6774307 ]
+fit_time : (0.24890923500061035, 0.27574706077575684, 0.3178520202636719, 0.27117013931274414, 0.2734661102294922)
+test_time : (1.7688961029052734, 1.7731058597564697, 1.7693121433258057, 1.7590458393096924, 1.7777149677276611)
+Estimating biases using als...
+Estimating biases using als...
+Estimating biases using als...
+Estimating biases using als...
+Estimating biases using als...
+Evaluating RMSE, MAE of algorithm BaselineOnly on 5 split(s).
+
+                  Fold 1  Fold 2  Fold 3  Fold 4  Fold 5  Mean    Std     
+RMSE (testset)    0.8780  0.8804  0.8685  0.8642  0.8729  0.8728  0.0060  
+MAE (testset)     0.6756  0.6770  0.6724  0.6651  0.6742  0.6729  0.0042  
+Fit time          0.32    0.37    0.37    0.35    0.36    0.35    0.02    
+Test time         0.08    0.13    0.13    0.08    0.08    0.10    0.02    
+test_rmse : [0.87795792 0.88039422 0.8684719  0.86417014 0.87286778]
+test_mae : [0.67559645 0.67699528 0.67241016 0.66508046 0.67421642]
+fit_time : (0.3184080123901367, 0.36727023124694824, 0.3708980083465576, 0.34937405586242676, 0.3580598831176758)
+test_time : (0.07997488975524902, 0.1295158863067627, 0.1299591064453125, 0.08225512504577637, 0.08239531517028809)
+Evaluating RMSE, MAE of algorithm CoClustering on 5 split(s).
+
+                  Fold 1  Fold 2  Fold 3  Fold 4  Fold 5  Mean    Std     
+RMSE (testset)    0.9422  0.9463  0.9416  0.9450  0.9484  0.9447  0.0025  
+MAE (testset)     0.7305  0.7315  0.7283  0.7305  0.7340  0.7310  0.0018  
+Fit time          2.62    2.65    3.13    3.50    3.04    2.99    0.33    
+Test time         0.17    0.16    0.55    0.16    0.14    0.24    0.16    
+test_rmse : [0.94223829 0.94634312 0.94163909 0.94504672 0.94838032]
+test_mae : [0.73050141 0.73149367 0.72834494 0.73053549 0.73395262]
+fit_time : (2.6179299354553223, 2.6483428478240967, 3.128354072570801, 3.503736734390259, 3.0405759811401367)
+test_time : (0.16846585273742676, 0.1600508689880371, 0.5463387966156006, 0.16349411010742188, 0.13900995254516602)
+kamleenbassi@Kamleens-Air AIMMBOT % 
