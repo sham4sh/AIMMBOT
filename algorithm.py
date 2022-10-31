@@ -30,15 +30,14 @@ for a in algorithms:
 #svd = cross_validate(.,data, measures=['RMSE','MAE'],cv=5,verbose=True)
 #displayResults("SVD algorithm Error ", svd)
 
-#trainset, testset = train_test_split(data, test_size=0.25)
-#algo = surprise.SVD()
-#algo.fit(trainset)
-#predictions = algo.test(testset)
+trainset, testset = train_test_split(data, test_size=0.25)
+algo = surprise.SVD()
+algo.fit(trainset)
+predictions = algo.test(testset)
 
 # Then compute RMSE
 #print(accuracy.rmse(predictions))
 accuracy.rmse(predictions)
-accuracy.
 
 def get_top_n(predictions, n=10):
     #Return the top-N recommendation for each user from a set of predictions.
@@ -54,10 +53,8 @@ def get_top_n(predictions, n=10):
         top_n[uid] = user_ratings[:n]
     return top_n
 
-'''
 top_n = get_top_n(predictions, n=10)
 
 # Print the recommended items for each user
 for uid, user_ratings in top_n.items():
     print(uid, [mid for (mid, _) in user_ratings]) # mid is movie id 
-'''
