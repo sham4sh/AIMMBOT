@@ -7,7 +7,9 @@ import requests
 import json
 import signin
 import pprint
-from PyQt5.QtWidgets import (QApplication, QLabel, QMainWindow, QStatusBar, QToolBar, QLineEdit, QGridLayout, QWidget, QPushButton, QMessageBox)
+from customWidgets import movieWidget
+from PyQt5.QtWidgets import (QApplication, QLabel, QVBoxLayout, QMainWindow, QStatusBar, QToolBar, QLineEdit, QGridLayout, QWidget, QPushButton, QMessageBox)
+from PyQt5.QtGui import QPixmap
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import auth
@@ -23,7 +25,14 @@ class MainWindow(QMainWindow):
         self.setGeometry(100, 100, 1500, 800)
         self.logoText = QLabel("AIMMBOT", parent=self)
         self.logoText.move(10, 30)
-        self.setCentralWidget(QLabel("CENTRAL WIDGET REQUIRED FOR RENDERING. REPLACE ME LATER"))
+		
+        container = QWidget()
+        containerLayout = QVBoxLayout()
+        container.setLayout(containerLayout)
+
+        movie = movieWidget('Testing', 'aimmbotlogo.png')
+        containerLayout.addWidget(movie)
+        self.setCentralWidget(container)
         self.createToolBar()
 
     
