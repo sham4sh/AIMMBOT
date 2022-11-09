@@ -4,14 +4,40 @@ ia = Cinemagoer()
 #id1 = '0000206' # TEST ID 
 #### CAN USE THIS CLASS TO GET SPECIFIC DATA ON ANY PERSON ID LISTED IN THE movies_*.csv FILES #### 
 
-class Person:
+class CinemagoerMovie:
+    idLength = 7
+    movie = None
+    id = ''
+
+    def __init__(self,id=''):
+        self.id = (len(id)-self.idLength)*'0' + id
+        self.movie = ia.get_movie(movieID=self.id) 
+    
+    def title(self):
+        if 'title' in self.movie.keys(): return self.movie['title']
+        else: return ''
+    
+    def year(self):
+        if 'year' in self.movie.keys(): year = self.movie['year']
+        else: return ''
+
+    def coverURL(self):
+        if 'cover url' in self.movie.keys(): coverURL = self.movie['cover url']
+        else: return ''
+    
+    def plot(self):
+        if 'plot outline' in self.movie.keys(): plot = self.movie['plot outline']
+        else: return ''
+
+    
+class CinemagoerPerson:
     idLength = 7
     individual = None
     id = ''
 
     def __init__(self,id=''):
         self.id = (len(id)-self.idLength)*'0' + id
-        self.individual = ia.get_person(id) 
+        self.individual = ia.get_person(self.id) 
     
     def name(self):
         if 'name' in self.individual.keys(): return self.individual['name']

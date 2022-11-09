@@ -11,8 +11,8 @@ import pandas as pd
 # In[2]:
 
 
-movies = pd.read_csv('tmdb_5000_movies.csv')
-credits = pd.read_csv('tmdb_5000_credits.csv')
+movies = pd.read_csv('data/tmdb_5000_movies.csv')
+credits = pd.read_csv('data/tmdb_5000_credits.csv')
 
 
 # In[3]:
@@ -267,7 +267,7 @@ def recommend(movie):
 # In[37]:
 
 
-recommend('Gandhi')
+recommend('Die Hard')
 
 
 # In[41]:
