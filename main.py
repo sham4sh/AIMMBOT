@@ -11,6 +11,7 @@ from customWidgets import movieWidget
 from PyQt5.QtWidgets import (QApplication, QLabel, QVBoxLayout, QMainWindow, QStatusBar, QToolBar, QLineEdit, QGridLayout, QWidget, QPushButton, QMessageBox)
 from PyQt5.QtGui import QPixmap
 import firebase_admin
+from UserDataFirebase import FirestoreDataAccess
 from firebase_admin import credentials
 from firebase_admin import auth
 cred = credentials.Certificate("aimmbot-ea206-firebase-adminsdk-wb137-2f8132fd73.json")
@@ -42,6 +43,7 @@ class MainWindow(QMainWindow):
         tools.addAction("Exit", self.close)
         tools.addAction("Login", self.logWindow)
         tools.addAction("Register", self.regWindow)
+        tools.addAction("My Favorites", self.favWindow)
         tools.setMovable(False)
         self.addToolBar(tools)
 
@@ -52,6 +54,11 @@ class MainWindow(QMainWindow):
 
     def regWindow(self):
         self.rf = RegisterWindow()
+        self.rf.show()
+        self.hide()
+    
+    def favWindow(self):
+        self.rf = favoritesWindow()
         self.rf.show()
         self.hide()
 
@@ -159,6 +166,30 @@ class RegisterWindow(QWidget):
 			msg.setText("Username Already Exists")
 			msg.exec()
 
+#window that allows users to add a favourite movie
+class favoritesWindow(QWidget):
+    def __init__(self): 
+        super().__init__()
+        self.setWindowTitle("My Favorites")
+        self.resize(1500, 800)
+        layout = QGridLayout()
+
+        button_exit = QPushButton('Return')
+        button_exit.clicked.connect(window.show)
+        button_exit.clicked.connect(self.hide)
+        layout.addWidget(button_exit, 0, 0)
+
+        userFavs = FirestoreDataAccess.getFavs("uid") #Need to get the uid
+
+        row = 1
+        column = 0
+        for movie in userFavs:
+            movieWidget.__init__(movie)
+            layout.addWidget(movie, row, column)
+            column = (column+1)%5
+            if column == 0:
+                row += 1
+  
     
 if __name__ == "__main__":
     currentUser = NULL
