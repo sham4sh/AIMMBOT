@@ -29,11 +29,12 @@ class FirestoreDataAccess:
     def addFav(self,userId, movieId, rating):
         doc_ref = self.users_ref.document(userId)
         doc_ref.set({movieId:rating}, merge=True)
+        return True
         
     def removeFav(self,userId, movieId):
         doc_ref = self.users_ref.document(userId)
         doc_ref.update({movieId:firestore.DELETE_FIELD}) # if field does not exist nothing happens 
-
+        return True
 
     
 def test():
