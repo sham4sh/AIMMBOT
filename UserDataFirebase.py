@@ -14,6 +14,7 @@ class FirestoreDataAccess:
         self.users_ref = self.db.collection(u'users')
       
     def getFavs(self, userId):
+        print(userId)
         favsDict = {}
         doc_ref = self.users_ref.document(userId)
         doc = doc_ref.get()

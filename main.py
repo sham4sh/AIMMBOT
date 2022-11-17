@@ -8,14 +8,15 @@ import json
 import signin
 import pprint
 from customWidgets import movieWidget
-from PyQt5.QtWidgets import (QApplication, QLabel, QVBoxLayout, QMainWindow, QStatusBar, QToolBar, QLineEdit, QGridLayout, QWidget, QPushButton, QMessageBox)
+from PyQt5.QtWidgets import (QApplication, QScrollArea, QLabel, QVBoxLayout, QMainWindow, QStatusBar, QToolBar, QLineEdit, QGridLayout, QWidget, QPushButton, QMessageBox)
 from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt, QSize
 import firebase_admin
 from UserDataFirebase import FirestoreDataAccess
 from firebase_admin import credentials
 from firebase_admin import auth
 cred = credentials.Certificate("aimmbot-ea206-firebase-adminsdk-wb137-2f8132fd73.json")
-firebase_admin.initialize_app(cred)
+mainApp = firebase_admin.initialize_app(cred)
 
 #Main window, loaded on application start. All widgets and popups stem from here.
 class MainWindow(QMainWindow):
@@ -179,16 +180,32 @@ class favoritesWindow(QWidget):
         button_exit.clicked.connect(self.hide)
         layout.addWidget(button_exit, 0, 0)
         
-        userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=app), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ") #Need to get the uid
+        userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ") #Need to get the uid
+
+        self.scroll = QScrollArea()             # Scroll Area which contains the widgets, set as the centralWidget
+        self.widget = QWidget()                 # Widget that contains the collection of Vertical Box
+        self.vbox = QVBoxLayout() 
 
         row = 1
         column = 0
         for movie in userFavs:
-            movieWidget.__init__(movie)
-            layout.addWidget(movie, row, column)
+            widgey = movieWidget(movie, 'aimmbotlogo.png')
+            self.vbox.addWidget(widgey)
             column = (column+1)%5
             if column == 0:
                 row += 1
+
+        self.widget.setLayout(self.vbox)
+
+        #Scroll Area Properties
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setWidget(self.widget)
+
+        layout.addWidget(self.scroll)
+
+        self.setLayout(layout)
   
     
 if __name__ == "__main__":
