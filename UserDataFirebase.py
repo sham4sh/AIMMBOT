@@ -14,7 +14,7 @@ class FirestoreDataAccess:
         self.users_ref = self.db.collection(u'users')
       
     def getFavs(self, userId):
-        print(userId)
+        assert type(userId) == type("")
         favsDict = {}
         doc_ref = self.users_ref.document(userId)
         doc = doc_ref.get()
@@ -26,6 +26,8 @@ class FirestoreDataAccess:
         return favsDict
     
     def addFav(self,userId, movieId, rating):
+        assert type(userId) == type(movieId) == type("") 
+        #assert len(movieId) == 
         doc_ref = self.users_ref.document(userId)
         doc_ref.set({movieId:rating}, merge=True)
         return True
