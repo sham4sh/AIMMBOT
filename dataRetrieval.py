@@ -1,3 +1,4 @@
+import csv
 import os
 import pandas as pd
 from imdb import Cinemagoer
@@ -16,9 +17,12 @@ class DataRetieval:
     ratings = {'adult':['NC-17','R','TV-MA'],'teen':['PG-13','TV-PG','TV-14'],'preteen':['PG','TV-Y7'],'general':['TV-Y','G','TV-G']}
 
     def readFile(self,filename): 
-        if os.path.exists(filename) and os.path.getsize(filename)>0:
-            return pd.read_csv(filename)
-        return pd.DataFrame()
+        if self.fileIsEmpty(filename): return pd.DataFrame()
+        else: return pd.read_csv(filename)
+    
+    def fileIsEmpty(self,filename):
+        if not os.path.exists(filename): return True
+        else: return os.path.getsize(filename)==0
 
     def getLinksFromCSV(self,filename): # returns a list of imdb ids to add to tables 
         imdbIdList = []
@@ -33,73 +37,72 @@ class DataRetieval:
     # creates a csv with ['movieId','imdbId','producerId']
     def addProducers(self,movieID, movie,filename = producersLocation):
         cols = ['movieId','imdbId','producerId']
-        df = self.readFile(filename)
-        if df.empty: 
-            df = pd.DataFrame(columns=cols)
-            #df.to_csv(filename)
-        if 'producer' in movie.keys() and not int(movieID) in set(df['movieId']):
+        df = pd.DataFrame(columns=cols)
+        if 'producer' in movie.keys():
             for p in movie['producer']:
-                df = df.append({"movieId":movieID, "imdbId":str(movie.movieID), "producerId":str(p.personID)},ignore_index=True)
+                df.loc[len(df)]= [movieID,str(movie.movieID),str(p.personID)]
+                #df = df.append({"movieId":movieID, "imdbId":str(movie.movieID), "producerId":str(p.personID)},ignore_index=True)
             df = df[cols]
-            df.to_csv(filename)
-                # with open(filename, 'a') as f_object:
-                #    dictwriter_object = DictWriter(f_object, fieldnames=cols)
-                #    dictwriter_object.writerow({"movieId":movieID, "imdbId":str(movie.movieID), "producerId":str(p.personID)})
-                #    f_object.close()
+            if not self.fileIsEmpty(filename):
+                df.to_csv(filename,mode='a',index=False,header=False)#,columns=cols)
+            else: df.to_csv(filename,columns=cols,index=False)
 
     # adds all cast and their ids to a csv 
     def addCast(self,movieID, movie,filename = castLocation):
         cols = ['movieId','imdbId','castId']
-        df = self.readFile(filename)
-        if df.empty: 
-            df = pd.DataFrame(columns=cols)
-        if 'cast' in movie.keys() and not int(movieID) in set(df['movieId']): 
+        df = pd.DataFrame(columns=cols)
+        if 'cast' in movie.keys(): 
             for c in movie['cast']:
-                df = df.append({"movieId":movieID, "imdbId":str(movie.movieID), "castId":str(c.personID)},ignore_index=True)
-        df = df[cols]
-        df.to_csv(filename)
+                df.loc[len(df)]= [movieID,str(movie.movieID),str(c.personID)]
+                #df = df.append({"movieId":movieID, "imdbId":str(movie.movieID), "castId":str(c.personID)},ignore_index=True)
+            df = df[cols]
+            if not self.fileIsEmpty(filename):
+                df.to_csv(filename,mode='a',index=False,header=False)#,columns=cols)
+            else: df.to_csv(filename,columns=cols,index=False)
 
     # adds all writers and their ids to a csv 
     def addWriter(self,movieID, movie,filename = writersLocation):
         cols = ['movieId','imdbId','writerId']
-        df = self.readFile(filename)
-        if df.empty: 
-            df = pd.DataFrame(columns=cols)
-        if 'writer' in movie.keys() and not int(movieID) in set(df['movieId']): 
+        df = pd.DataFrame(columns=cols)
+        if 'writer' in movie.keys():
             for w in movie['writer']:
-                df = df.append({"movieId":movieID, "imdbId":str(movie.movieID), "writerId":str(w.personID)},ignore_index=True)
-        df = df[cols]
-        df.to_csv(filename)
+                df.loc[len(df)]= [movieID,str(movie.movieID),str(w.personID)]
+                #df = df.append({"movieId":movieID, "imdbId":str(movie.movieID), "writerId":str(w.personID)},ignore_index=True)
+            df = df[cols]
+            if not self.fileIsEmpty(filename):
+                df.to_csv(filename,mode='a',index=False,header=False)#,columns=cols)
+            else: df.to_csv(filename,columns=cols,index=False)
 
     # adds all writers and their ids to a csv 
     def addDirectors(self,movieID, movie,filename = directorLocation):
         cols = ['movieId','imdbId','directorId']
-        df = self.readFile(filename)
-        if df.empty: 
-            df = pd.DataFrame(columns=cols)
-        if 'director' in movie.keys() and not int(movieID) in set(df['movieId']): 
+        df = pd.DataFrame(columns=cols)
+        if 'director' in movie.keys():
             for d in movie['director']:
-                df = df.append({"movieId":movieID, "imdbId":str(movie.movieID), "directorId":str(d.personID)},ignore_index=True)
-        df = df[cols]
-        df.to_csv(filename)
+                df.loc[len(df)]= [movieID,str(movie.movieID),str(d.personID)]
+                #df = df.append({"movieId":movieID, "imdbId":str(movie.movieID), "directorId":str(d.personID)},ignore_index=True)
+            df = df[cols]
+            if not self.fileIsEmpty(filename):
+                df.to_csv(filename,mode='a',index=False,header=False)#,columns=cols)
+            else: df.to_csv(filename,columns=cols,index=False)
 
     # adds all genres to a csv
     def addMovieDetails(self,movieID,movie,filename = moviesDetailsLocation):
         cols = ['movieId','imdbId','title','year','parentalRating','runtime','coverURL','plot']
         title, year, plot,coverURL= '','','',''
-        df = self.readFile(filename)
-        if df.empty: 
-            df = pd.DataFrame(columns=cols)
+        df = pd.DataFrame(columns=cols)
         
         # adding all relavent data to a dict 
         if 'title' in movie.keys(): title = movie['title']
         if 'year' in movie.keys(): year = movie['year']
         if 'cover url' in movie.keys(): coverURL = movie['cover url']
         if 'plot outline' in movie.keys(): plot = movie['plot outline']
-        if not int(movieID) in set(df['movieId']): 
-            df = df.append({"movieId":movieID,"imdbId":str(movie.movieID), 'title':title, 'year':year,'parentalRating':self.getCert(movie),'runtime':self.getRuntime(movie),'coverURL':coverURL,"plot":plot},ignore_index=True)
-            df = df[cols]
-            df.to_csv(filename)
+        df.loc[len(df)]= [movieID, str(movie.movieID), title, year, self.getCert(movie), self.getRuntime(movie), coverURL, plot] 
+        #df = df.append({"movieId":movieID,"imdbId":str(movie.movieID), 'title':title, 'year':year,'parentalRating':self.getCert(movie),'runtime':self.getRuntime(movie),'coverURL':coverURL,"plot":plot},ignore_index=True)
+        df = df[cols]
+        if not self.fileIsEmpty(filename):
+            df.to_csv(filename,mode='a',index=False,header=False)#,columns=cols)
+        else: df.to_csv(filename,columns=cols,index=False)
 
     # returns most conservative rating of a movie 
     def getCert(self,movie):
@@ -134,49 +137,80 @@ class DataRetieval:
     # add Genres to a csv 
     def addGenres(self,movieID,movie,filename = genresLocation):
         cols = ['movieId','imdbId','genre']
-        df = self.readFile(filename)
-        if df.empty: 
-            df = pd.DataFrame(columns=cols)
-        if 'genres' in movie.keys() and not int(movieID) in set(df['movieId']): 
+        df = pd.DataFrame(columns=cols)
+        if 'genres' in movie.keys():
             for g in movie['genres']:
                 #print(g)
-                df = df.append({"movieId":movieID, "imdbId":str(movie.movieID), "genre":g},ignore_index=True)
-        df = df[cols]
-        df.to_csv(filename)
+                df.loc[len(df)]= [movieID, str(movie.movieID), g]
+                #df = df.append({"movieId":movieID, "imdbId":str(movie.movieID), "genre":g},ignore_index=True)
+            df = df[cols]
+            if not self.fileIsEmpty(filename):
+                df.to_csv(filename,mode='a',index=False,header=False)#,columns=cols)
+            else: df.to_csv(filename,columns=cols,index=False)
 
     # adds country of origin to a csv 
     def addCountries(self,movieID, movie,filename = countriesLocation):
         cols = ['movieId','imdbId','countries']
-        df = self.readFile(filename)
-        if df.empty: 
-            df = pd.DataFrame(columns=cols)
-        if 'countries' in movie.keys() and not int(movieID) in set(df['movieId']): 
+        df = pd.DataFrame(columns=cols)
+        if 'countries' in movie.keys():
             for c in movie['countries']:
                 #print(c)
-                df = df.append({"movieId":movieID, "imdbId":str(movie.movieID), "countries":c},ignore_index=True)
-        df = df[cols]
-        df.to_csv(filename)
+                df.loc[len(df)]= [movieID,movie.movieID,c]
+                #df = df.append({"movieId":movieID, "imdbId":str(movie.movieID), "countries":c},ignore_index=True)
+            df = df[cols]
+            if not self.fileIsEmpty(filename):
+                df.to_csv(filename,mode='a',index=False,header=False)#,columns=cols)
+            else: df.to_csv(filename,columns=cols,index=False)
 
     def getAllData(self):
         ia = Cinemagoer()
         df = self.readFile(self.linksLocation)
+        val = 300
+        df = df[(df['movieId']>=val)]#&(df['movieId']<val+300)]
         #################df = df.sample(frac=0.0205,random_state=1)
         #print(len(df))
+        midErrors = [] #ERROR OCCURED AT [720, 2008, 31700, 86668]
+        timeoutError = []
         if  'imdbId' in df.columns or 'movieId' in df.columns: 
             for x in df.index:
-                movieID = int(df.loc[x, "movieId"])
-                currImdbId = str(df.loc[x, "imdbId"])
-                currImdbId = '0' * (7-len(currImdbId)) + currImdbId
-                #movieID = 2 # TEST 
-                #currImdbId = '0114709' #TEST 
-                movie = ia.get_movie(currImdbId)
-                self.addProducers(movieID,movie,self.producersLocation)
-                self.addCast(movieID,movie,self.castLocation)
-                self.addWriter(movieID,movie,self.writersLocation)
-                self.addGenres(movieID,movie,self.genresLocation)
-                self.addCountries(movieID,movie,self.countriesLocation)
-                self.addMovieDetails(movieID,movie,self.moviesDetailsLocation)
-                self.addDirectors(movieID,movie,self.directorLocation)
+                try:
+                    movieID = int(df.loc[x, "movieId"])
+                    currImdbId = str(df.loc[x, "imdbId"])
+                    currImdbId = '0' * (7-len(currImdbId)) + currImdbId
+                    #movieID = 2 # TEST 
+                    #currImdbId = '0114709' #TEST 
+                    movie = ia.get_movie(currImdbId)
+                    self.addProducers(movieID,movie,self.producersLocation)
+                    self.addCast(movieID,movie,self.castLocation)
+                    self.addWriter(movieID,movie,self.writersLocation)
+                    self.addGenres(movieID,movie,self.genresLocation)
+                    self.addCountries(movieID,movie,self.countriesLocation)
+                    self.addMovieDetails(movieID,movie,self.moviesDetailsLocation)
+                    self.addDirectors(movieID,movie,self.directorLocation)
+                except TimeoutError as e:
+                    timeoutError.append(movieID)
+                    ia = Cinemagoer()
+                    print(str(e))
+                except Exception as e:
+                    print(str(e))
+                    midErrors.append(movieID)
+            print(midErrors)
+            print(timeoutError)
+            self.dropDuplicateRows(self.producersLocation)
+            self.dropDuplicateRows(self.moviesDetailsLocation)
+            self.dropDuplicateRows(self.genresLocation)
+            self.dropDuplicateRows(self.castLocation)
+            self.dropDuplicateRows(self.writersLocation)
+            self.dropDuplicateRows(self.countriesLocation)
+            self.dropDuplicateRows(self.directorLocation)
+            
+        
+    def dropDuplicateRows(self,filename):
+        df = self.readFile(filename)
+        if len(df)>0: 
+            cols = df.columns.to_list()
+            df.drop_duplicates(inplace=True,ignore_index=True)
+            df.to_csv(filename,columns=cols,index=False)
 
     def readFileTest(self):
         testLocation = 'data.txt'
@@ -188,3 +222,6 @@ class DataRetieval:
     '''
     add step to make sure imdb movie ID is valid 
     '''
+
+x= DataRetieval()
+x.getAllData()
