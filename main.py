@@ -12,6 +12,7 @@ from PyQt5.QtWidgets import (QApplication, QScrollArea, QLabel, QVBoxLayout, QMa
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QSize
 import firebase_admin
+import algorithm
 from UserDataFirebase import FirestoreDataAccess
 from firebase_admin import credentials
 from firebase_admin import auth
@@ -28,16 +29,31 @@ class MainWindow(QMainWindow):
         self.logoText = QLabel("AIMMBOT", parent=self)
         self.logoText.move(10, 30)
         
+        self.scroll = QScrollArea()
         container = QWidget()
         containerLayout = QVBoxLayout()
         container.setLayout(containerLayout)
+
+        searchBar = QLabel('<font size="4"> Put Search Bar Here </font>')
+        containerLayout.addWidget(searchBar)
+
+        algoOne = QLabel('<font size="4"> Movies for users like you </font>')
+        containerLayout.addWidget(algoOne)
+        algoOneCall = algorithm.get_top_n(FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ"), n=5)
+        top5 = algoOneCall[0]
+        for movie in top5:
+            widgey = movieWidget(movie, 'aimmbotlogo.png')
+            self.vbox.addWidget(widgey)
 
         movie = movieWidget('Testing', 'aimmbotlogo.png')
         containerLayout.addWidget(movie)
         self.setCentralWidget(container)
         self.createToolBar()
 
-    
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll.setWidgetResizable(True)
+        #self.scroll.setWidget(self.container)
 
     def createToolBar(self):
         tools = QToolBar()
@@ -186,14 +202,9 @@ class favoritesWindow(QWidget):
         self.widget = QWidget()                 # Widget that contains the collection of Vertical Box
         self.vbox = QVBoxLayout() 
 
-        row = 1
-        column = 0
         for movie in userFavs:
             widgey = movieWidget(movie, 'aimmbotlogo.png')
             self.vbox.addWidget(widgey)
-            column = (column+1)%5
-            if column == 0:
-                row += 1
 
         self.widget.setLayout(self.vbox)
 
