@@ -1,5 +1,8 @@
 from PyQt5.QtWidgets import (QWidget, QLabel, QPushButton, QHBoxLayout)
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import (QPixmap, QImage)
+import pandas as pd
+from PIL import Image
+import requests
 
 
 class movieWidget(QWidget):
@@ -7,13 +10,22 @@ class movieWidget(QWidget):
     def __init__(self, name, image):
         super(movieWidget, self).__init__()
 
-        self.name = name  # Name of widget used for searching.
         self.is_on = False # Current state (true=ON, false=OFF)
+        title = "Default"
+        im = image
 
-        self.lbl = QLabel(self.name)    #  The widget label
-        self.btn = QPushButton(name)     
+        df = pd.read_csv('data/movies_detailed.csv')
 
-        self.pixmap = QPixmap(image)
+        for ind in df.index:
+            if (str(name) == str(df['imdbId'][ind])):
+                title = df['title'][ind]
+                im = QImage()
+                im.loadFromData(requests.get(df['coverURL'][ind]).content)
+
+        self.lbl = QLabel(title)    #  The widget label
+        self.btn = QPushButton(title)     
+
+        self.pixmap = QPixmap(im)
 
         # adding image to label
         self.lbl.setPixmap(self.pixmap)
