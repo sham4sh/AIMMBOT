@@ -6,11 +6,14 @@ import sys
 import requests
 import json
 import signin
+import keywordSearch
 import pprint
 from customWidgets import movieWidget
 from PyQt5.QtWidgets import (QApplication, QScrollArea, QLabel, QVBoxLayout, QMainWindow, QStatusBar, QToolBar, QLineEdit, QGridLayout, QWidget, QPushButton, QMessageBox)
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QSize
+import pandas as pd
+import customWidgets
 import firebase_admin
 from UserDataFirebase import FirestoreDataAccess
 from firebase_admin import credentials
@@ -32,7 +35,7 @@ class MainWindow(QMainWindow):
         containerLayout = QVBoxLayout()
         container.setLayout(containerLayout)
 
-        movie = movieWidget('Testing', 'aimmbotlogo.png')
+        movie = movieWidget('Testing')
         containerLayout.addWidget(movie)
         self.setCentralWidget(container)
         self.createToolBar()
@@ -45,6 +48,7 @@ class MainWindow(QMainWindow):
         tools.addAction("Login", self.logWindow)
         tools.addAction("Register", self.regWindow)
         tools.addAction("My Favorites", self.favWindow)
+        tools.addAction("Search", self.srchWindow)
         tools.setMovable(False)
         self.addToolBar(tools)
 
@@ -59,8 +63,12 @@ class MainWindow(QMainWindow):
         self.hide()
     
     def favWindow(self):
-        self.rf = favoritesWindow()
-        self.rf.show()
+        self.ff = favoritesWindow()
+        self.ff.show()
+        self.hide()
+    def srchWindow(self):
+        self.sf = searchWindow()
+        self.sf.show()
         self.hide()
 
 #Window that allows existing users to log in to their account
@@ -189,7 +197,7 @@ class favoritesWindow(QWidget):
         row = 1
         column = 0
         for movie in userFavs:
-            widgey = movieWidget(movie, 'aimmbotlogo.png')
+            widgey = movieWidget(movie)
             self.vbox.addWidget(widgey)
             column = (column+1)%5
             if column == 0:
@@ -206,6 +214,59 @@ class favoritesWindow(QWidget):
         layout.addWidget(self.scroll)
 
         self.setLayout(layout)
+
+class searchWindow(QWidget):
+    def __init__(self): 
+        super().__init__()
+        self.setWindowTitle("Search")
+        self.resize(1500, 800)
+        layout = QGridLayout()
+
+        button_exit = QPushButton('Return')
+        button_exit.clicked.connect(window.show)
+        button_exit.clicked.connect(self.hide)
+        layout.addWidget(button_exit, 0, 0)
+
+
+        self.scroll = QScrollArea()             # Scroll Area which contains the widgets, set as the centralWidget
+        self.widget = QWidget()                 # Widget that contains the collection of Vertical Box
+        self.vbox = QVBoxLayout() 
+
+        label_searchBar = QLabel('<font size="4"> Search: </font>')
+        self.lineEdit_searchBar = QLineEdit()
+        self.lineEdit_searchBar.setPlaceholderText('Enter a keyword')
+        layout.addWidget(label_searchBar, 1, 0)
+        layout.addWidget(self.lineEdit_searchBar, 1, 1)
+
+        button_search = QPushButton('Go!')
+        self.populate("spider-man")
+        #button_search.clicked.connect(self.populate(self.lineEdit_searchBar.text()))
+        #if (self.lineEdit_searchBar.text() != ''):
+            #button_search.clicked.connect(print(self.lineEdit_searchBar.text()))
+
+        
+        layout.addWidget(button_search, 2, 0, 1, 2)
+
+        self.widget.setLayout(self.vbox)
+
+        #Scroll Area Properties
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setWidget(self.widget)
+
+        layout.addWidget(self.scroll)
+
+        self.setLayout(layout)
+
+    def populate(self, input):
+        df = pd.read_csv('data/movies_detailed.csv')
+        for ind in df.index:
+            if (input.upper() in df['title'][ind].upper()):
+                widget = customWidgets.movieWidget(df['imdbId'][ind])
+                self.vbox.addWidget(widget)
+
+
   
     
 if __name__ == "__main__":

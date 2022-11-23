@@ -7,12 +7,12 @@ import requests
 
 class movieWidget(QWidget):
 
-    def __init__(self, name, image):
+    def __init__(self, name):
         super(movieWidget, self).__init__()
 
         self.is_on = False # Current state (true=ON, false=OFF)
         title = "Default"
-        im = image
+        im = 'aimmbotlogo.png'
 
         df = pd.read_csv('data/movies_detailed.csv')
 
