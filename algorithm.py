@@ -56,5 +56,5 @@ def get_top_n(predictions, n=10):
 top_n = get_top_n(predictions, n=10)
 
 # Print the recommended items for each user
-for uid, user_ratings in top_n.items():
-    print(uid, [mid for (mid, _) in user_ratings]) # mid is movie id 
+#for uid, user_ratings in top_n.items():
+#    print(uid, [mid for (mid, _) in user_ratings]) # mid is movie id 

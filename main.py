@@ -7,13 +7,16 @@ import requests
 import json
 import signin
 import pprint
+import random
 from customWidgets import movieWidget
 from PyQt5.QtWidgets import (QApplication, QScrollArea, QLabel, QVBoxLayout, QMainWindow, QStatusBar, QToolBar, QLineEdit, QGridLayout, QWidget, QPushButton, QMessageBox)
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QSize
 import firebase_admin
-import algorithm
+from algorithm import get_top_n
 from UserDataFirebase import FirestoreDataAccess
+from Reconmmeder import Recommender_working_nov13 as a2
+from Cinemagoer import CinemagoerMovie
 from firebase_admin import credentials
 from firebase_admin import auth
 cred = credentials.Certificate("aimmbot-ea206-firebase-adminsdk-wb137-2f8132fd73.json")
@@ -39,13 +42,22 @@ class MainWindow(QMainWindow):
 
         algoOne = QLabel('<font size="4"> Movies for users like you </font>')
         containerLayout.addWidget(algoOne)
-        algoOneCall = algorithm.get_top_n(FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ"), n=5)
-        top5 = algoOneCall[0]
-        for movie in top5:
-            widgey = movieWidget(movie, 'aimmbotlogo.png')
-            self.vbox.addWidget(widgey)
+        algoOneCall = get_top_n(FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ"), n=10)
+        top10 = algoOneCall[0]
+        for movie in top10:
+            widgey = movieWidget(movie, CinemagoerMovie.coverURL(movie))
+            #self.vbox.addWidget(widgey)
 
-        movie = movieWidget('Testing', 'aimmbotlogo.png')
+        userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ")
+        randMovie = random.choice(list(userFavs.items()))
+        algoTwo = QLabel('<font size="4"> Movies like ', randMovie)
+        containerLayout.addWidget(algoTwo)
+        a2Recommends = a2.get_movie_recommendation(randMovie)
+        for movie in a2Recommends:
+            widgey = movieWidget(movie, CinemagoerMovie.coverURL(movie))
+            #self.vbox.addWidget(widgey)
+
+        movie = movieWidget('AimmBot', 'aimmbotlogo.png')
         containerLayout.addWidget(movie)
         self.setCentralWidget(container)
         self.createToolBar()

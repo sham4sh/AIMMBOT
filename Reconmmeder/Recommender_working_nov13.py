@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-movies = pd.read_csv(r'movies.csv')
-ratings = pd.read_csv(r'ratings.csv')
+movies = pd.read_csv(r'Reconmmeder\movies.csv')
+ratings = pd.read_csv(r'Reconmmeder\ratings.csv')
 data = pd.pivot(index = 'movieId',columns = 'userId', data = ratings,values ='rating')
 numberOf_user_voted_for_movie = pd.DataFrame(ratings.groupby('movieId')['rating'].agg('count'))
 numberOf_user_voted_for_movie.reset_index(level = 0,inplace = True)
@@ -42,6 +42,6 @@ def get_movie_recommendation(movie_name):
     else:
         return "No movies found. Please check your input"
     
-movie = input("Enter a movie: ")
-print(get_movie_recommendation(movie))
+#movie = input("Enter a movie: ")
+#print(get_movie_recommendation(movie))
 
