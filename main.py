@@ -14,6 +14,7 @@ from PyQt5.QtWidgets import (QApplication, QScrollArea, QLabel, QVBoxLayout, QMa
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QSize
 import pandas as pd
+import numpy as np
 import customWidgets
 import firebase_admin
 from algorithm import (PrimaryAlgorithm, getImdbId)
@@ -47,7 +48,8 @@ class MainWindow(QMainWindow):
         top10 = a1.get_top_n(FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ"), 10)
         for movie in top10:
             imdbId = getImdbId(movie)
-            widget = movieWidget(imdbId)
+            id = imdbId.item()
+            widget = customWidgets.movieWidget(str(id))
             containerLayout.addWidget(widget)
 
         '''userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ")
