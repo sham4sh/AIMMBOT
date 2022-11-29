@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-movies = pd.read_csv(r'Reconmmeder\movies.csv')
-ratings = pd.read_csv(r'Reconmmeder\ratings.csv')
+movies = pd.read_csv(r'Reconmmeder/movies.csv')
+ratings = pd.read_csv(r'Reconmmeder/ratings.csv')
 data = pd.pivot(index = 'movieId',columns = 'userId', data = ratings,values ='rating')
 numberOf_user_voted_for_movie = pd.DataFrame(ratings.groupby('movieId')['rating'].agg('count'))
 numberOf_user_voted_for_movie.reset_index(level = 0,inplace = True)

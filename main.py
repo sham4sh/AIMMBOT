@@ -6,14 +6,17 @@ import sys
 import requests
 import json
 import signin
+import keywordSearch
 import pprint
 import random
 from customWidgets import movieWidget
 from PyQt5.QtWidgets import (QApplication, QScrollArea, QLabel, QVBoxLayout, QMainWindow, QStatusBar, QToolBar, QLineEdit, QGridLayout, QWidget, QPushButton, QMessageBox)
 from PyQt5.QtGui import QPixmap
 from PyQt5.QtCore import Qt, QSize
+import pandas as pd
+import customWidgets
 import firebase_admin
-from algorithm import get_top_n
+from algorithm import (PrimaryAlgorithm, getImdbId)
 from UserDataFirebase import FirestoreDataAccess
 from Reconmmeder import Recommender_working_nov13 as a2
 from Cinemagoer import CinemagoerMovie
@@ -37,27 +40,27 @@ class MainWindow(QMainWindow):
         containerLayout = QVBoxLayout()
         container.setLayout(containerLayout)
 
-        searchBar = QLabel('<font size="4"> Put Search Bar Here </font>')
-        containerLayout.addWidget(searchBar)
-
         algoOne = QLabel('<font size="4"> Movies for users like you </font>')
         containerLayout.addWidget(algoOne)
-        algoOneCall = get_top_n(FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ"), n=10)
-        top10 = algoOneCall[0]
+        a1=PrimaryAlgorithm()
+        df = a1.processData()
+        top10 = a1.get_top_n(FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ"), 10)
         for movie in top10:
-            widgey = movieWidget(movie, CinemagoerMovie.coverURL(movie))
-            #self.vbox.addWidget(widgey)
+            imdbId = getImdbId(movie)
+            widget = movieWidget(imdbId)
+            containerLayout.addWidget(widget)
 
-        userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ")
+        '''userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ")
         randMovie = random.choice(list(userFavs.items()))
-        algoTwo = QLabel('<font size="4"> Movies like ', randMovie)
+        algoTwo = QLabel('<font size="4"> Movies like %s</font>'%randMovie[0])
         containerLayout.addWidget(algoTwo)
-        a2Recommends = a2.get_movie_recommendation(randMovie)
+        a2Recommends = a2.get_movie_recommendation(randMovie2)
         for movie in a2Recommends:
+            print(movie)
             widgey = movieWidget(movie, CinemagoerMovie.coverURL(movie))
-            #self.vbox.addWidget(widgey)
+            self.vbox.addWidget(widgey)'''
 
-        movie = movieWidget('AimmBot', 'aimmbotlogo.png')
+        movie = movieWidget('Testing')
         containerLayout.addWidget(movie)
         self.setCentralWidget(container)
         self.createToolBar()
@@ -73,6 +76,7 @@ class MainWindow(QMainWindow):
         tools.addAction("Login", self.logWindow)
         tools.addAction("Register", self.regWindow)
         tools.addAction("My Favorites", self.favWindow)
+        tools.addAction("Search", self.srchWindow)
         tools.setMovable(False)
         self.addToolBar(tools)
 
@@ -87,8 +91,12 @@ class MainWindow(QMainWindow):
         self.hide()
     
     def favWindow(self):
-        self.rf = favoritesWindow()
-        self.rf.show()
+        self.ff = favoritesWindow()
+        self.ff.show()
+        self.hide()
+    def srchWindow(self):
+        self.sf = searchWindow()
+        self.sf.show()
         self.hide()
 
 #Window that allows existing users to log in to their account
@@ -215,7 +223,7 @@ class favoritesWindow(QWidget):
         self.vbox = QVBoxLayout() 
 
         for movie in userFavs:
-            widgey = movieWidget(movie, 'aimmbotlogo.png')
+            widgey = movieWidget(movie)
             self.vbox.addWidget(widgey)
 
         self.widget.setLayout(self.vbox)
@@ -229,6 +237,59 @@ class favoritesWindow(QWidget):
         layout.addWidget(self.scroll)
 
         self.setLayout(layout)
+
+class searchWindow(QWidget):
+    def __init__(self): 
+        super().__init__()
+        self.setWindowTitle("Search")
+        self.resize(1500, 800)
+        layout = QGridLayout()
+
+        button_exit = QPushButton('Return')
+        button_exit.clicked.connect(window.show)
+        button_exit.clicked.connect(self.hide)
+        layout.addWidget(button_exit, 0, 0)
+
+
+        self.scroll = QScrollArea()             # Scroll Area which contains the widgets, set as the centralWidget
+        self.widget = QWidget()                 # Widget that contains the collection of Vertical Box
+        self.vbox = QVBoxLayout() 
+
+        label_searchBar = QLabel('<font size="4"> Search: </font>')
+        self.lineEdit_searchBar = QLineEdit()
+        self.lineEdit_searchBar.setPlaceholderText('Enter a keyword')
+        layout.addWidget(label_searchBar, 1, 0)
+        layout.addWidget(self.lineEdit_searchBar, 1, 1)
+
+        button_search = QPushButton('Go!')
+        self.populate("spider-man")
+        #button_search.clicked.connect(self.populate(self.lineEdit_searchBar.text()))
+        #if (self.lineEdit_searchBar.text() != ''):
+            #button_search.clicked.connect(print(self.lineEdit_searchBar.text()))
+
+        
+        layout.addWidget(button_search, 2, 0, 1, 2)
+
+        self.widget.setLayout(self.vbox)
+
+        #Scroll Area Properties
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setWidget(self.widget)
+
+        layout.addWidget(self.scroll)
+
+        self.setLayout(layout)
+
+    def populate(self, input):
+        df = pd.read_csv('data/movies_detailed.csv')
+        for ind in df.index:
+            if (input.upper() in df['title'][ind].upper()):
+                widget = customWidgets.movieWidget(df['imdbId'][ind])
+                self.vbox.addWidget(widget)
+
+
   
     
 if __name__ == "__main__":
