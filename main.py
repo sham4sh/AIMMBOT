@@ -39,7 +39,6 @@ class MainWindow(QMainWindow):
         self.scroll = QScrollArea()
         container = QWidget()
         containerLayout = QVBoxLayout()
-        container.setLayout(containerLayout)
 
         algoOne = QLabel('<font size="4"> Movies for users like you </font>')
         containerLayout.addWidget(algoOne)
@@ -62,15 +61,17 @@ class MainWindow(QMainWindow):
             widgey = movieWidget(movie, CinemagoerMovie.coverURL(movie))
             self.vbox.addWidget(widgey)'''
 
-        movie = movieWidget('Testing')
-        containerLayout.addWidget(movie)
-        self.setCentralWidget(container)
+    
+        container.setLayout(containerLayout)
+
+
+        self.setCentralWidget(self.scroll)
         self.createToolBar()
 
         self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.scroll.setWidgetResizable(True)
-        #self.scroll.setWidget(self.container)
+        self.scroll.setWidget(container)
 
     def createToolBar(self):
         tools = QToolBar()
