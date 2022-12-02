@@ -74,6 +74,7 @@ def getImdbId(mid):
     mid = int(mid)
     df = pd.read_csv('data/links.csv')
     assert 'movieId' in df.columns and 'imdbId' in df.columns
-    return df.loc[mid,'imdbId']
+    ind = df[df['movieId']==mid].index.values
+    return df.loc[ind,'imdbId']
 
-print(getImdbId('1'))
+#print(getImdbId('1'))
