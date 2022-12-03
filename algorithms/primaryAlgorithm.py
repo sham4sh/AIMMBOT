@@ -27,6 +27,7 @@ class PrimaryAlgorithm:
             print("Prim Algorithm - File Not Found - do not return a widget with user based recommendations.")
         except Exception as e:
             print(type(e).__name__, e.args)
+            df = pd.DataFrame()
         return df 
 
     def processData(self):
@@ -34,36 +35,38 @@ class PrimaryAlgorithm:
         reader = Reader(rating_scale=(0.5,5.0)) # used to parse file containing ratings - REQUIRED 
         data = Dataset.load_from_df(df[['userId','imdbId','rating']],reader).build_full_trainset()
         self.data = data
-        return self.data
+        #return self.data
     
-    def getPredictionsHelper(self, userData):
+    def getPredictionsHelper(self,data): # instance of algo 
         algo = surprise.SVD()
-        algo.fit(self.data)
-        predictions = algo.test(userData)
-        return predictions
+        algo.fit(data)
+        return algo
 
     def get_top_n(self, uid, n=10):
-        uid = str(uid)
-        predictions = self.getPredictionsHelper()
-        # First map the predictions to each user.
-        top_n = defaultdict(list)
-        for uid, iid, true_r, est, _ in predictions:
-            top_n[uid].append((iid, est))
+        uid = int(uid)
+        df = self.getDataHelper()
+        self.processData()
+        algo = self.getPredictionsHelper(self.data)
 
-        # Then sort the predictions for each user and retrieve the k highest ones.
-        for uid, user_ratings in top_n.items():
-            user_ratings.sort(key=lambda x: x[1], reverse=True)
-            top_n[uid] = user_ratings[:n]
+        # get unique movies 
+        unique_movies = df['imdbId'].unique() # np 
+        user = df.loc[df['userId']==uid, ['imdbId']]
+        unique_movies_filtered = np.setdiff1d(unique_movies,user)
+        predictions = {}
+        # dict of movie_id : prediction 
+        for movie_id in unique_movies_filtered:
+            predictions[movie_id] =  algo.predict(uid=uid,iid=movie_id).est
+
+        # sort by values high to low 
+        top_n = sorted(predictions.items(),key=lambda x: x[1], reverse=True)
         
-        if uid in top_n.keys():
-            return([mid for (mid, _) in top_n[uid]])
-        else: return list()
+        return([movie_id for (movie_id, _) in top_n[:n]])
 
     def test(self):
         #prim = PrimaryAlgorithm()
         df = self.processData()
-        top_n = self.get_top_n('0114709', 10)
-        print(self.get_top_n('0114709',15))
+        top_n = self.get_top_n(114709, 10)
+        print(self.get_top_n(114709,10))
 #END CLASS 
 
 '''
@@ -77,4 +80,4 @@ def getImdbId(mid):
 #print(str(getImdbId('1')))
 '''
 
-print(PrimaryAlgorithm().test())
+#PrimaryAlgorithm().test()
