@@ -10,7 +10,7 @@ class SecondaryAlgorithm:
     csr_data = None 
     data_final = None 
     ratings = None
-    movies = None
+    #movies = None
 
     def __init__(self):
         self.processData()
@@ -26,7 +26,7 @@ class SecondaryAlgorithm:
         except Exception as e:
             print(type(e).__name__, e.args)
         self.ratings = ratings 
-        self.movies = movies 
+        #self.movies = movies 
 
     def processData(self):
         self.getDataHelper()
@@ -47,14 +47,14 @@ class SecondaryAlgorithm:
         knn = NearestNeighbors(metric='cosine', algorithm='brute', n_neighbors=20)
         knn.fit(self.csr_data)
         movie_counter = n
-        movie_idx= self.movies.index[self.movies['imdbId']==int(mid)].tolist()[0]
+        movie_idx= self.ratings.index[self.ratings['imdbId']==int(mid)].tolist()[0]
         distances , indices = knn.kneighbors(self.csr_data[movie_idx],n_neighbors = movie_counter + 1)    
         rec_movie_indices = sorted(list(zip(indices.squeeze(),distances.squeeze())), key = lambda x: x[1])[1::1]
         imdbIds = []
         #print(rec_movie_indices)
         for val in rec_movie_indices:
             movie_idx = self.data_final.iloc[val[0]]['imdbId']
-            idx = self.movies[self.movies['imdbId'] == movie_idx].index
+            idx = self.ratings[self.ratings['imdbId'] == movie_idx].index
             imdbIds.append(int(movie_idx))
             #print(movie_idx, self.movies.iloc[idx]['title'].values[0])
         return imdbIds
