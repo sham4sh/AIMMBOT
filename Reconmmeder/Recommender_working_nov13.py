@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-movies = pd.read_csv(r'Reconmmeder/movies.csv')
-ratings = pd.read_csv(r'Reconmmeder/ratings.csv')
+movies = pd.read_csv(r'data/movies_detailed.csv')
+ratings = pd.read_csv(r'data/ratings.csv')
 data = pd.pivot(index = 'movieId',columns = 'userId', data = ratings,values ='rating')
 numberOf_user_voted_for_movie = pd.DataFrame(ratings.groupby('movieId')['rating'].agg('count'))
 numberOf_user_voted_for_movie.reset_index(level = 0,inplace = True)
@@ -23,6 +23,7 @@ def get_movie_recommendation(movie_name):
     movie_list = movies[movies['title'].str.contains(movie_name)]  
     if len(movie_list):        
         movie_idx= movie_list.iloc[0]['movieId']
+        print("movieIDx",movie_idx)
         movie_idx = data_final[data_final['movieId'] == movie_idx].index[0]
         distances , indices = knn.kneighbors(csr_data[movie_idx],n_neighbors = movie_counter + 1)    
         rec_movie_indices = sorted(list(zip(indices.squeeze(),distances.squeeze())), key = lambda x: x[1])[1::1]
@@ -43,5 +44,5 @@ def get_movie_recommendation(movie_name):
         return "No movies found. Please check your input"
     
 #movie = input("Enter a movie: ")
-#print(get_movie_recommendation(movie))
+print(get_movie_recommendation('Toy Story'))
 

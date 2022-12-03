@@ -15,14 +15,14 @@ class PrimaryAlgorithm:
     data = None
     filelocation = 'data/ratings.csv'
 
-    def __init__(self) -> None:
+    def __init__(self):
         df = self.processData()
 
     def getDataHelper(self): # HELPER FUNCTION 
         try:
             df = pd.read_csv(self.filelocation)
-            if np.in1d(np.array(['userId','movieId','rating']), df.columns).all():
-                df = df[['userId','movieId','rating']]
+            if np.in1d(np.array(['userId','imdbId','rating']), df.columns).all():
+                df = df[['userId','imdbId','rating']]
         except FileNotFoundError as e:
             print("Prim Algorithm - File Not Found - do not return a widget with user based recommendations.")
         except Exception as e:
@@ -32,7 +32,7 @@ class PrimaryAlgorithm:
     def processData(self):
         df = self.getDataHelper()
         reader = Reader(rating_scale=(0.5,5.0)) # used to parse file containing ratings - REQUIRED 
-        data = Dataset.load_from_df(df[['userId','movieId','rating']],reader).build_full_trainset()
+        data = Dataset.load_from_df(df[['userId','imdbId','rating']],reader).build_full_trainset()
         self.data = data
         return self.data
     
@@ -63,18 +63,21 @@ class PrimaryAlgorithm:
         else: return list()
 
     def test(self):
-        prim = PrimaryAlgorithm()
-        df = prim.processData()
-        top_n = prim.get_top_n('1', 10)
-        print(prim.get_top_n('1',15))
+        #prim = PrimaryAlgorithm()
+        df = self.processData()
+        top_n = self.get_top_n('0114709', 10)
+        print(self.get_top_n('0114709',15))
 #END CLASS 
 
-
+'''
 def getImdbId(mid):
     mid = int(mid)
     df = pd.read_csv('data/links.csv')
     assert 'movieId' in df.columns and 'imdbId' in df.columns
     ind = df[df['movieId']==mid].index.values
-    return df.loc[ind,'imdbId']
+    return df.loc[ind,'imdbId'].values[0]
 
-#print(getImdbId('1'))
+#print(str(getImdbId('1')))
+'''
+
+print(PrimaryAlgorithm().test())

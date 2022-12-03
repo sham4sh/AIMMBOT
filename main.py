@@ -17,9 +17,9 @@ import pandas as pd
 import numpy as np
 import customWidgets
 import firebase_admin
-from algorithm import (PrimaryAlgorithm, getImdbId)
+from algorithms.primaryAlgorithm import (PrimaryAlgorithm, getImdbId)
 from UserDataFirebase import FirestoreDataAccess
-from Reconmmeder import Recommender_working_nov13 as a2
+from algorithms import secondaryAlgorithm as a2
 from Cinemagoer import CinemagoerMovie
 from firebase_admin import credentials
 from firebase_admin import auth

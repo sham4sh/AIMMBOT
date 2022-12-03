@@ -27,10 +27,13 @@ class FirestoreDataAccess:
     
     def addFav(self,userId, movieId, rating):
         assert type(userId) == type(movieId) == type("") 
-        #assert len(movieId) == 
-        doc_ref = self.users_ref.document(userId)
-        doc_ref.set({movieId:rating}, merge=True)
-        return True
+        validAndProcessed = False
+        if type(rating) == float() or type(rating) == int(): # checks if valid input 
+            if rating>=0.0 and rating<=5.0:
+                doc_ref = self.users_ref.document(userId)
+                doc_ref.set({movieId:rating}, merge=True)
+                validAndProcessed = True
+        return validAndProcessed # returns boolean that tells if the rating is valid and processed 
         
     def removeFav(self,userId, movieId):
         doc_ref = self.users_ref.document(userId)

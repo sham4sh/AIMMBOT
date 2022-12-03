@@ -1,43 +1,73 @@
 from imdb import Cinemagoer
-ia = Cinemagoer()
 
 #id1 = '0000206' # TEST ID 
 #### CAN USE THIS CLASS TO GET SPECIFIC DATA ON ANY PERSON ID LISTED IN THE movies_*.csv FILES #### 
+### converting into a singleton class 
 
-class CinemagoerMovie:
+class CinemagoerMovie(object):
     idLength = 7
     movie = None
     id = ''
+    ia = Cinemagoer()
 
-    def __init__(self,id=''):
+    def __init__(self, id=''):
+        self.setId(id)
+    
+    def __new__(self,id=''):
+        if not hasattr(self, 'instance'):
+            self.instance = super(CinemagoerMovie, self).__new__(self)
+        return self.instance
+
+    def setId(self,id):
+        assert type(id)==type(str())
         self.id = (len(id)-self.idLength)*'0' + id
-        self.movie = ia.get_movie(movieID=self.id) 
-    
-    def title(self):
-        if 'title' in self.movie.keys(): return self.movie['title']
-        else: return ''
-    
-    def year(self):
-        if 'year' in self.movie.keys(): year = self.movie['year']
-        else: return ''
+        try:
+            self.movie = self.ia.get_movie(movieID=self.id) 
+        except TimeoutError as e:
+            ia = Cinemagoer()
 
-    def coverURL(self):
-        if 'cover url' in self.movie.keys(): coverURL = self.movie['cover url']
-        else: return ''
+    def title(self, id=''):
+        if len(id)!=0: self.setId(id)
+        try:
+            if 'title' in self.movie.keys(): return self.movie['title']
+            else: return ''
+        except TimeoutError as e:
+            ia = Cinemagoer()
     
-    def plot(self):
-        if 'plot outline' in self.movie.keys(): plot = self.movie['plot outline']
-        else: return ''
+    def year(self, id=''):
+        if len(id)!=0: self.setId(id)
+        try:
+            if 'year' in self.movie.keys(): year = self.movie['year']
+            else: return ''
+        except TimeoutError as e:
+            ia = Cinemagoer()
+        
 
+    def coverURL(self, id=''):
+        if len(id)!=0: self.setId(id)
+        try:
+            if 'cover url' in self.movie.keys(): coverURL = self.movie['cover url']
+            else: return ''
+        except TimeoutError as e:
+            ia = Cinemagoer()
+    
+    def plot(self, id=''):
+        if len(id)!=0: self.setId(id)
+        try:
+            if 'plot outline' in self.movie.keys(): plot = self.movie['plot outline']
+            else: return ''
+        except TimeoutError as e:
+            ia = Cinemagoer()
     
 class CinemagoerPerson:
     idLength = 7
     individual = None
     id = ''
+    ia = Cinemagoer()
 
     def __init__(self,id=''):
         self.id = (len(id)-self.idLength)*'0' + id
-        self.individual = ia.get_person(self.id) 
+        self.individual = self.ia.get_person(self.id) 
     
     def name(self):
         if 'name' in self.individual.keys(): return self.individual['name']
@@ -63,12 +93,12 @@ class CinemagoerPerson:
             films = self.individual['filmography']['actor']
             #print(films)
             for f in films:
-                filmsID.append(ia.get_movie(f.movieID))
+                filmsID.append(self.ia.get_movie(f.movieID))
         return filmsID
 
 
 '''
-x= ia.get_person(id1)
+x= self.ia.get_person(id1)
 for y in x.keys():
     print(y, ' ', type(x[y]))
 
