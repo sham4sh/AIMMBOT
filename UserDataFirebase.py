@@ -1,6 +1,7 @@
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
+import UserCSVData 
 
 
 class FirestoreDataAccess:
@@ -27,17 +28,22 @@ class FirestoreDataAccess:
     
     def addFav(self,userId, movieId, rating):
         assert type(userId) == type(movieId) == type("") 
+        assert movieId.isdigit() == True
         validAndProcessed = False
         if type(rating) == float() or type(rating) == int(): # checks if valid input 
             if rating>=0.0 and rating<=5.0:
                 doc_ref = self.users_ref.document(userId)
                 doc_ref.set({movieId:rating}, merge=True)
+                UserCSVData().addFav(userId, movieId, rating)
                 validAndProcessed = True
         return validAndProcessed # returns boolean that tells if the rating is valid and processed 
         
     def removeFav(self,userId, movieId):
+        assert type(userId) == type(movieId) == type("") 
+        assert movieId.isdigit() == True
         doc_ref = self.users_ref.document(userId)
         doc_ref.update({movieId:firestore.DELETE_FIELD}) # if field does not exist nothing happens 
+        UserCSVData().removeFav(userId, movieId)
         return True
 
     

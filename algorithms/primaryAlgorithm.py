@@ -36,10 +36,7 @@ class PrimaryAlgorithm:
         self.data = data
         return self.data
     
-    def getPredictionsHelper(self):
-        algo = surprise.SVD()
-        algo.fit(self.data)
-        userData = self.data.build_testset()
+    def getPredictionsHelper(self, userData):
         algo = surprise.SVD()
         algo.fit(self.data)
         predictions = algo.test(userData)
