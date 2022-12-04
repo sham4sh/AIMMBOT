@@ -35,7 +35,7 @@ class PrimaryAlgorithm:
             df = pd.DataFrame()
         return df 
 
-    def processData(self,uid, favsDict=None):
+    def processData(self,uid,favsDict=None):
         df = self.getDataHelper(uid)
         if favsDict is not None:
             ids = favsDict.keys()
@@ -56,10 +56,10 @@ class PrimaryAlgorithm:
         algo.fit(data)
         return algo
 
-    def get_top_n(self, uid, n=10):
+    def get_top_n(self, uid, favsDict=None, n=10):
         #uid = int(uid)
         df = self.getDataHelper(uid)
-        self.processData(uid)
+        self.processData(uid, favsDict)
         algo = self.getPredictionsHelper(self.data)
 
         # get unique movies 
@@ -79,8 +79,8 @@ class PrimaryAlgorithm:
     def test(self):
         #prim = PrimaryAlgorithm()
         df = self.processData()
-        top_n = self.get_top_n(114709, 10)
-        print(self.get_top_n(114709,10))
+        top_n = self.get_top_n(114709)
+        print(self.get_top_n(114709))
 #END CLASS 
 
 '''
