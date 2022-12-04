@@ -15,14 +15,19 @@ class PrimaryAlgorithm:
     data = None
     filelocation = 'data/ratings.csv'
 
-    def __init__(self):
-        df = self.processData()
+    def __init__(self, uid = None):
+        if uid is not None:
+            df = self.processData()
+        self.uid = uid
 
-    def getDataHelper(self): # HELPER FUNCTION 
+    def getDataHelper(self, uid): # HELPER FUNCTION 
         try:
+            self.uid = uid
             df = pd.read_csv(self.filelocation)
             if np.in1d(np.array(['userId','imdbId','rating']), df.columns).all():
                 df = df[['userId','imdbId','rating']]
+                df['rating_count'] = df['imdbId'].map(df['imdbId'].value_counts())
+                df = df[(df['rating_count']<=200) | (df['userId']==uid)]
         except FileNotFoundError as e:
             print("Prim Algorithm - File Not Found - do not return a widget with user based recommendations.")
         except Exception as e:
@@ -30,8 +35,8 @@ class PrimaryAlgorithm:
             df = pd.DataFrame()
         return df 
 
-    def processData(self):
-        df = self.getDataHelper()
+    def processData(self,uid):
+        df = self.getDataHelper(uid)
         reader = Reader(rating_scale=(0.5,5.0)) # used to parse file containing ratings - REQUIRED 
         data = Dataset.load_from_df(df[['userId','imdbId','rating']],reader).build_full_trainset()
         self.data = data
@@ -43,9 +48,9 @@ class PrimaryAlgorithm:
         return algo
 
     def get_top_n(self, uid, n=10):
-        uid = int(uid)
-        df = self.getDataHelper()
-        self.processData()
+        #uid = int(uid)
+        df = self.getDataHelper(uid)
+        self.processData(uid)
         algo = self.getPredictionsHelper(self.data)
 
         # get unique movies 
@@ -79,5 +84,3 @@ def getImdbId(mid):
 
 #print(str(getImdbId('1')))
 '''
-
-#PrimaryAlgorithm().test()
