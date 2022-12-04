@@ -34,7 +34,7 @@ class FirestoreDataAccess:
             if rating>=0.0 and rating<=5.0:
                 doc_ref = self.users_ref.document(userId)
                 doc_ref.set({movieId:rating}, merge=True)
-                UserCSVData().addFav(userId, movieId, rating)
+                #UserCSVData().addFav(userId, movieId, rating)
                 validAndProcessed = True
         return validAndProcessed # returns boolean that tells if the rating is valid and processed 
         
@@ -43,7 +43,7 @@ class FirestoreDataAccess:
         assert movieId.isdigit() == True
         doc_ref = self.users_ref.document(userId)
         doc_ref.update({movieId:firestore.DELETE_FIELD}) # if field does not exist nothing happens 
-        UserCSVData().removeFav(userId, movieId)
+        #UserCSVData().removeFav(userId, movieId)
         return True
 
     

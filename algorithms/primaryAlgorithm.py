@@ -35,8 +35,17 @@ class PrimaryAlgorithm:
             df = pd.DataFrame()
         return df 
 
-    def processData(self,uid):
+    def processData(self,uid, favsDict=None):
         df = self.getDataHelper(uid)
+        if favsDict is not None:
+            ids = favsDict.keys()
+            ratings = favsDict.values()
+            df_temp = pd.DataFrame()
+            df_temp['userId'] = [uid]*len(ids)
+            df_temp['movieId'] = [-1]*len(ids)
+            df_temp['imdbId'] = ids
+            df_temp['rating'] = ratings
+            df = pd.concat([df,df_temp])
         reader = Reader(rating_scale=(0.5,5.0)) # used to parse file containing ratings - REQUIRED 
         data = Dataset.load_from_df(df[['userId','imdbId','rating']],reader).build_full_trainset()
         self.data = data
