@@ -1,8 +1,12 @@
-from PyQt5.QtWidgets import (QWidget, QLabel, QPushButton, QHBoxLayout)
-from PyQt5.QtGui import (QPixmap, QImage)
+from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, QHBoxLayout, QGridLayout, QScrollArea, QVBoxLayout, QFormLayout, QComboBox)
+from PyQt5.QtGui import (QPixmap, QImage, QFont)
+from PyQt5 import Qt
+from PyQt5.QtCore import Qt
 import pandas as pd
 from PIL import Image
 import requests
+import sys
+from UserDataFirebase import FirestoreDataAccess
 
 
 class movieWidget(QWidget):
@@ -19,6 +23,7 @@ class movieWidget(QWidget):
         for ind in df.index:
             if (str(name) == str(df['imdbId'][ind])):
                 title = df['title'][ind]
+                imdbId = str(name)
                 im = QImage()
                 im.loadFromData(requests.get(df['coverURL'][ind]).content)
 
@@ -39,3 +44,97 @@ class movieWidget(QWidget):
         self.hbox.addWidget(self.lbl)   # Add the label to the layout
         self.hbox.addWidget(self.btn)
         self.setLayout(self.hbox)
+
+        movWin = movieWindow(imdbId)
+        self.btn.clicked.connect(movWin.show())
+
+
+
+class movieWindow(QWidget):
+    def __init__(self, imdbId): 
+        super().__init__()
+
+        title = ''
+        url = ''
+        plot = ''
+        year = ''
+
+        df = pd.read_csv('data/movies_detailed.csv')
+        for ind in df.index:
+            if (imdbId == df['imdbId'][ind]):
+                title = df['title'][ind]
+                url = df['coverURL'][ind]
+                year = df['year'][ind]
+                plot = df['plot'][ind]
+
+        im = QImage()
+        im.loadFromData(requests.get(url).content)
+        
+        self.setWindowTitle(title)
+        self.resize(1200, 600)
+        layout = QGridLayout()
+
+        self.cover = QLabel(title)  
+        self.info = QLabel(title +", " + str(year))
+        self.info.setFont(QFont('Arial', 20))
+        self.plotlbl = QLabel(str(plot))
+        self.plotlbl.setGeometry(200, 200, 200, 200)
+        self.plotlbl.setWordWrap = False
+        self.plotlbl.setFont(QFont('Arial', 15))
+        #self.plotlbl.setStyleSheet("border : 2px solid black;")
+
+        self.pixmap = QPixmap(im)
+        scaled_pixmap = self.pixmap.scaled(200, 200, 1, 0)
+
+        # adding image to label
+        self.cover.setPixmap(scaled_pixmap)
+ 
+        # Optional, resize label to image size
+        self.cover.resize(self.pixmap.width(), self.pixmap.height())
+
+        self.scroll = QScrollArea()             # Scroll Area which contains the widgets, set as the centralWidget
+        self.widget = QWidget()                 # Widget that contains the collection of Vertical Box
+        self.vbox = QVBoxLayout() 
+
+        self.vbox.addWidget(self.plotlbl)
+
+        self.widget.setLayout(self.vbox)
+
+        #Scroll Area Properties
+        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scroll.setWidgetResizable(True)
+        self.scroll.setWidget(self.widget)
+
+        combobox = QComboBox()
+        combobox.addItems(['RATE FILM', 'One Star', 'Two Stars', 'Three Stars', 'Four Stars', 'Five Stars', 'REMOVE RATING'])
+
+        # Connect signals to the methods.
+        rating = ''
+        combobox.activated.connect(self.activated)
+
+        combobox.setFont(QFont('Arial', 10))
+
+
+        button_exit = QPushButton('Return')
+        button_exit.clicked.connect(self.close)
+        layout.addWidget(button_exit, 0, 0)
+        layout.addWidget(self.cover, 1, 0)
+        layout.addWidget(self.info, 1, 1)
+        layout.addWidget(self.scroll, 2, 0, 1, 1)
+        layout.addWidget(combobox, 2, 1)
+        
+        
+
+        self.setLayout(layout)
+
+
+    def activated(Self, index):
+        print("Activated index:", index)
+
+
+
+#app = QApplication([])
+#win = movieWindow(1231587)
+#win.show()
+#sys.exit(app.exec())
