@@ -84,3 +84,5 @@ def getImdbId(mid):
 
 #print(str(getImdbId('1')))
 '''
+
+#PrimaryAlgorithm().test()
