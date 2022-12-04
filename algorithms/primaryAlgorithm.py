@@ -43,7 +43,7 @@ class PrimaryAlgorithm:
         return algo
 
     def get_top_n(self, uid, n=10):
-        uid = int(uid)
+        #uid = int(uid)
         df = self.getDataHelper()
         self.processData()
         algo = self.getPredictionsHelper(self.data)

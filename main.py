@@ -17,7 +17,7 @@ import pandas as pd
 import numpy as np
 import customWidgets
 import firebase_admin
-from algorithms.primaryAlgorithm import (PrimaryAlgorithm, getImdbId)
+from algorithms.primaryAlgorithm import (PrimaryAlgorithm)
 from UserDataFirebase import FirestoreDataAccess
 from algorithms import secondaryAlgorithm as a2
 from Cinemagoer import CinemagoerMovie
@@ -44,10 +44,9 @@ class MainWindow(QMainWindow):
         containerLayout.addWidget(algoOne)
         a1=PrimaryAlgorithm()
         df = a1.processData()
-        top10 = a1.get_top_n(FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ"), 10)
+        top10 = a1.get_top_n("eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ")
         for movie in top10:
-            imdbId = getImdbId(movie)
-            id = imdbId.item()
+            id = movie.item()
             widget = customWidgets.movieWidget(str(id))
             containerLayout.addWidget(widget)
 
