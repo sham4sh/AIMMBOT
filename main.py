@@ -44,13 +44,13 @@ class MainWindow(QMainWindow):
         containerLayout.addWidget(algoOne)
         a1=PrimaryAlgorithm()
         df = a1.processData()
-        top10 = a1.get_top_n("eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ")
+        top10 = a1.get_top_n("testUser")
         for movie in top10:
             id = movie.item()
             widget = customWidgets.movieWidget(str(id))
             containerLayout.addWidget(widget)
 
-        userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ")
+        userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "testUser")
         randMovie = random.choice(list(userFavs.items()))
         algoTwo = QLabel('<font size="4"> Movies like %s</font>'%randMovie[0])
         containerLayout.addWidget(algoTwo)
@@ -99,7 +99,7 @@ class MainWindow(QMainWindow):
     def favWindow(self):
         self.ff = favoritesWindow()
         self.ff.show()
-        self.close()
+        self.hide()
     def srchWindow(self):
         self.sf = searchWindow()
         self.sf.show()
@@ -219,11 +219,10 @@ class favoritesWindow(QWidget):
 
         button_exit = QPushButton('Return')
         button_exit.clicked.connect(window.show)
-        button_exit.clicked.connect(window.show)
         button_exit.clicked.connect(self.hide)
         layout.addWidget(button_exit, 0, 0)
         
-        userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ") #Need to get the uid
+        userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "testUser") #Need to get the uid
 
         self.scroll = QScrollArea()             # Scroll Area which contains the widgets, set as the centralWidget
         self.widget = QWidget()                 # Widget that contains the collection of Vertical Box

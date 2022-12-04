@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import (QApplication, QWidget, QLabel, QPushButton, QHBoxLayout, QGridLayout, QScrollArea, QVBoxLayout, QFormLayout, QComboBox)
 from PyQt5.QtGui import (QPixmap, QImage, QFont)
 from PyQt5 import Qt
+from PyQt5 import QtCore as qtc
 from PyQt5.QtCore import Qt
 import pandas as pd
 from PIL import Image
@@ -12,6 +13,7 @@ from UserDataFirebase import FirestoreDataAccess
 class movieWidget(QWidget):
 
     def __init__(self, name):
+        
         super(movieWidget, self).__init__()
 
         self.is_on = False # Current state (true=ON, false=OFF)
@@ -23,12 +25,14 @@ class movieWidget(QWidget):
         for ind in df.index:
             if (str(name) == str(df['imdbId'][ind])):
                 title = df['title'][ind]
-                imdbId = str(name)
                 im = QImage()
                 im.loadFromData(requests.get(df['coverURL'][ind]).content)
 
         self.lbl = QLabel(title)    #  The widget label
         self.btn = QPushButton(title)     
+
+        self.btn.clicked.connect(self.movWin)
+        
 
         self.pixmap = QPixmap(im)
 
@@ -45,15 +49,27 @@ class movieWidget(QWidget):
         self.hbox.addWidget(self.btn)
         self.setLayout(self.hbox)
 
-        movWin = movieWindow(imdbId)
-        self.btn.clicked.connect(movWin.show())
+    def movWin(self):
+        self.win = movieWindow()
+        self.win.fillWindow(1231587)
+        self.win.show()
+
+        
 
 
 
 class movieWindow(QWidget):
-    def __init__(self, imdbId): 
+
+    def __init__(self): 
         super().__init__()
 
+        
+
+
+    def activated(Self, index):
+        print("Activated index:", index)
+    
+    def fillWindow(self, imdbId):
         title = ''
         url = ''
         plot = ''
@@ -67,8 +83,11 @@ class movieWindow(QWidget):
                 year = df['year'][ind]
                 plot = df['plot'][ind]
 
-        im = QImage()
-        im.loadFromData(requests.get(url).content)
+        try:
+            im = QImage()
+            im.loadFromData(requests.get(url).content)
+        except:
+            im = 'aimmbotlogo.png'
         
         self.setWindowTitle(title)
         self.resize(1200, 600)
@@ -117,7 +136,7 @@ class movieWindow(QWidget):
 
 
         button_exit = QPushButton('Return')
-        button_exit.clicked.connect(self.close)
+        button_exit.clicked.connect(self.hide)
         layout.addWidget(button_exit, 0, 0)
         layout.addWidget(self.cover, 1, 0)
         layout.addWidget(self.info, 1, 1)
@@ -129,8 +148,6 @@ class movieWindow(QWidget):
         self.setLayout(layout)
 
 
-    def activated(Self, index):
-        print("Activated index:", index)
 
 
 
