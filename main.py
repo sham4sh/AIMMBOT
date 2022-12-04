@@ -17,9 +17,9 @@ import pandas as pd
 import numpy as np
 import customWidgets
 import firebase_admin
-from algorithms.primaryAlgorithm import (PrimaryAlgorithm, getImdbId)
+from algorithms.primaryAlgorithm import (PrimaryAlgorithm)
+from algorithms.secondaryAlgorithm import (SecondaryAlgorithm)
 from UserDataFirebase import FirestoreDataAccess
-from algorithms import secondaryAlgorithm as a2
 from Cinemagoer import CinemagoerMovie
 from firebase_admin import credentials
 from firebase_admin import auth
@@ -44,22 +44,25 @@ class MainWindow(QMainWindow):
         containerLayout.addWidget(algoOne)
         a1=PrimaryAlgorithm()
         df = a1.processData()
-        top10 = a1.get_top_n(FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ"), 10)
+        top10 = a1.get_top_n("eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ")
         for movie in top10:
-            imdbId = getImdbId(movie)
-            id = imdbId.item()
+            id = movie.item()
             widget = customWidgets.movieWidget(str(id))
             containerLayout.addWidget(widget)
 
-        '''userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ")
+        userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "eyJhbGciOiJSUzI1NiIsImtpZCI6IjNmNjcyNDYxOTk4YjJiMzMyYWQ4MTY0ZTFiM2JlN2VkYTY4NDZiMzciLCJ0eXAiOiJKV1QifQ")
         randMovie = random.choice(list(userFavs.items()))
         algoTwo = QLabel('<font size="4"> Movies like %s</font>'%randMovie[0])
         containerLayout.addWidget(algoTwo)
-        a2Recommends = a2.get_movie_recommendation(randMovie2)
+        '''df = pd.read_csv('data/links.csv')
+        assert 'movieId' in df.columns and 'imdbId' in df.columns
+        ind = df[df['imdbId']==randMovie[0]].index.values
+        mid = df.loc[ind,'movieId'].values[1]
+        a2 = SecondaryAlgorithm()
+        a2Recommends = a2.get_top_n(mid)
         for movie in a2Recommends:
-            print(movie)
-            widgey = movieWidget(movie, CinemagoerMovie.coverURL(movie))
-            self.vbox.addWidget(widgey)'''
+            widget = customWidgets.movieWidget(str(movie))             
+            containerLayout.addWidget(widget)'''
 
     
         container.setLayout(containerLayout)
@@ -96,7 +99,7 @@ class MainWindow(QMainWindow):
     def favWindow(self):
         self.ff = favoritesWindow()
         self.ff.show()
-        self.hide()
+        self.close()
     def srchWindow(self):
         self.sf = searchWindow()
         self.sf.show()
@@ -215,6 +218,7 @@ class favoritesWindow(QWidget):
         layout = QGridLayout()
 
         button_exit = QPushButton('Return')
+        button_exit.clicked.connect(window.show)
         button_exit.clicked.connect(window.show)
         button_exit.clicked.connect(self.hide)
         layout.addWidget(button_exit, 0, 0)
