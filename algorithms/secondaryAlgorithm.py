@@ -73,3 +73,6 @@ def test():
     print(x.get_top_n(13442))
     print(x.get_top_n('20629'))
     print(x.get_top_n('21814'))
+
+#a2 = SecondaryAlgorithm()
+#print(a2.get_top_n(67952))
