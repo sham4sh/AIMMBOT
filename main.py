@@ -23,11 +23,11 @@ from UserDataFirebase import FirestoreDataAccess
 from Cinemagoer import CinemagoerMovie
 from firebase_admin import credentials
 from firebase_admin import auth
-import currentUser
+import currentData
 cred = credentials.Certificate("aimmbot-ea206-firebase-adminsdk-wb137-2f8132fd73.json")
 mainApp = firebase_admin.initialize_app(cred)
 FDA = FirestoreDataAccess(mainApp)
-cur = currentUser.currentUser()
+cur = currentData.currentData()
 
 #Main window, loaded on application start. All widgets and popups stem from here.
 class MainWindow(QMainWindow):
@@ -42,6 +42,16 @@ class MainWindow(QMainWindow):
         self.scroll = QScrollArea()
         container = QWidget()
         containerLayout = QVBoxLayout()
+
+        label_searchBar = QLabel('<font size="4"> Search: </font>')
+        self.lineEdit_searchBar = QLineEdit()
+        self.lineEdit_searchBar.setPlaceholderText('Enter a keyword')
+        containerLayout.addWidget(label_searchBar)
+        containerLayout.addWidget(self.lineEdit_searchBar)
+
+        button_search = QPushButton('Go!')
+        button_search.clicked.connect(self.srchWindow)
+        containerLayout.addWidget(button_search)
 
         algoOne = QLabel('<font size="4"> Movies for users like you </font>')
         containerLayout.addWidget(algoOne)
@@ -105,6 +115,7 @@ class MainWindow(QMainWindow):
         self.ff.show()
         self.hide()
     def srchWindow(self):
+        cur.updateKeyword(self.lineEdit_searchBar.text())
         self.sf = searchWindow()
         self.sf.show()
         self.hide()
@@ -268,27 +279,14 @@ class searchWindow(QWidget):
         button_exit = QPushButton('Return')
         button_exit.clicked.connect(window.show)
         button_exit.clicked.connect(self.hide)
-        layout.addWidget(button_exit, 0, 0)
+        layout.addWidget(button_exit)
 
 
         self.scroll = QScrollArea()             # Scroll Area which contains the widgets, set as the centralWidget
         self.widget = QWidget()                 # Widget that contains the collection of Vertical Box
         self.vbox = QVBoxLayout() 
 
-        label_searchBar = QLabel('<font size="4"> Search: </font>')
-        self.lineEdit_searchBar = QLineEdit()
-        self.lineEdit_searchBar.setPlaceholderText('Enter a keyword')
-        layout.addWidget(label_searchBar, 1, 0)
-        layout.addWidget(self.lineEdit_searchBar, 1, 1)
-
-        button_search = QPushButton('Go!')
-        self.populate("spider-man")
-        #button_search.clicked.connect(self.populate(self.lineEdit_searchBar.text()))
-        #if (self.lineEdit_searchBar.text() != ''):
-            #button_search.clicked.connect(print(self.lineEdit_searchBar.text()))
-
-        
-        layout.addWidget(button_search, 2, 0, 1, 2)
+        self.populate(cur.getKeyword())
 
         self.widget.setLayout(self.vbox)
 
@@ -305,7 +303,7 @@ class searchWindow(QWidget):
     def populate(self, input):
         df = pd.read_csv('data/movies_detailed.csv')
         for ind in df.index:
-            if (input.upper() in df['title'][ind].upper()):
+            if (input.upper() in str(df['plot'][ind]).upper() or input.upper() in str(df['title'][ind]).upper()):
                 widget = customWidgets.movieWidget(df['imdbId'][ind])
                 self.vbox.addWidget(widget)
 
@@ -313,7 +311,7 @@ class searchWindow(QWidget):
   
     
 if __name__ == "__main__":
-    currentUser = NULL
+    #currentData = NULL
     app = QApplication([])
     app.setStyle('Oxygen')
     window = MainWindow()

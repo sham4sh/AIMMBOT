@@ -8,6 +8,8 @@ from PIL import Image
 import requests
 import sys
 from UserDataFirebase import FirestoreDataAccess
+from google.cloud import firestore
+from firebase_admin import credentials
 
 
 class movieWidget(QWidget):
@@ -64,11 +66,15 @@ class movieWindow(QWidget):
 
     def __init__(self): 
         super().__init__()
+        #self.db = firestore.Client(credentials=credentials.Certificate("aimmbot-ea206-firebase-adminsdk-wb137-2f8132fd73.json"))
 
         
 
 
-    def activated(Self, index):
+    def activated(self, index):
+        #self.db.collection(u'users').document(cur.getUser()).set({
+        #    self.id : index       
+        #})
         print("Activated index:", index)
     
     def fillWindow(self, imdbId):
@@ -154,6 +160,7 @@ class movieWindow(QWidget):
 
 
 #app = QApplication([])
-#win = movieWindow(1231587)
+#win = movieWindow()
+#win.fillWindow(1231587)
 #win.show()
 #sys.exit(app.exec())
