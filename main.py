@@ -94,7 +94,7 @@ class MainWindow(QMainWindow):
         tools.addAction("Exit", self.close)
         tools.addAction("Login", self.logWindow)
         tools.addAction("Register", self.regWindow)
-        tools.addAction("My Favorites", self.favWindow)
+        tools.addAction("Watchlist", self.favWindow)
         tools.addAction("Refresh", self.refresh)
         tools.setMovable(False)
         self.addToolBar(tools)
@@ -224,7 +224,7 @@ class RegisterWindow(QWidget):
             user = auth.create_user(email=self.lineEdit_username.text(), password=self.lineEdit_password.text())
             currentUser = signin.sign_in_with_email_and_password(email=self.lineEdit_username.text(), password=self.lineEdit_password.text())
             cur.updateUser(currentUser['localId'])
-            msg.setText("Account Created Succesfully")
+            msg.setText("Account Created Succesfully! Add some movies to your watchlist and get started!")
             msg.exec_()
             msg.hide()
             self.hide()
@@ -237,7 +237,7 @@ class RegisterWindow(QWidget):
 class favoritesWindow(QWidget):
     def __init__(self): 
         super().__init__()
-        self.setWindowTitle("My Favorites")
+        self.setWindowTitle("My Watchlist")
         self.resize(1500, 800)
         layout = QGridLayout()
 
