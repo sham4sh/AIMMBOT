@@ -23,8 +23,11 @@ from UserDataFirebase import FirestoreDataAccess
 from Cinemagoer import CinemagoerMovie
 from firebase_admin import credentials
 from firebase_admin import auth
+import currentData
 cred = credentials.Certificate("aimmbot-ea206-firebase-adminsdk-wb137-2f8132fd73.json")
 mainApp = firebase_admin.initialize_app(cred)
+FDA = FirestoreDataAccess(mainApp)
+cur = currentData.currentData()
 
 #Main window, loaded on application start. All widgets and popups stem from here.
 class MainWindow(QMainWindow):
@@ -40,20 +43,30 @@ class MainWindow(QMainWindow):
         container = QWidget()
         containerLayout = QVBoxLayout()
 
+        label_searchBar = QLabel('<font size="4"> Search: </font>')
+        self.lineEdit_searchBar = QLineEdit()
+        self.lineEdit_searchBar.setPlaceholderText('Enter a keyword')
+        containerLayout.addWidget(label_searchBar)
+        containerLayout.addWidget(self.lineEdit_searchBar)
+
+        button_search = QPushButton('Go!')
+        button_search.clicked.connect(self.srchWindow)
+        containerLayout.addWidget(button_search)
+
         algoOne = QLabel('<font size="4"> Movies for users like you </font>')
         containerLayout.addWidget(algoOne)
         a1=PrimaryAlgorithm()
-        df = a1.processData()
-        top10 = a1.get_top_n("testUser")
+        df = a1.processData(cur.getUser())
+        top10 = a1.get_top_n(cur.getUser(), FDA.getFavs(cur.getUser()))
         for movie in top10:
             id = movie.item()
             widget = customWidgets.movieWidget(str(id))
             containerLayout.addWidget(widget)
 
-        userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "testUser")
-        randMovie = random.choice(list(userFavs.items()))
-        algoTwo = QLabel('<font size="4"> Movies like %s</font>'%randMovie[0])
-        containerLayout.addWidget(algoTwo)
+        #userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), cur.getUser())
+        #randMovie = random.choice(list(userFavs.items()))
+        #algoTwo = QLabel('<font size="4"> Movies like %s</font>'%randMovie[0])
+        #containerLayout.addWidget(algoTwo)
         '''df = pd.read_csv('data/links.csv')
         assert 'movieId' in df.columns and 'imdbId' in df.columns
         ind = df[df['imdbId']==randMovie[0]].index.values
@@ -81,8 +94,8 @@ class MainWindow(QMainWindow):
         tools.addAction("Exit", self.close)
         tools.addAction("Login", self.logWindow)
         tools.addAction("Register", self.regWindow)
-        tools.addAction("My Favorites", self.favWindow)
-        tools.addAction("Search", self.srchWindow)
+        tools.addAction("Watchlist", self.favWindow)
+        tools.addAction("Refresh", self.refresh)
         tools.setMovable(False)
         self.addToolBar(tools)
 
@@ -101,9 +114,16 @@ class MainWindow(QMainWindow):
         self.ff.show()
         self.hide()
     def srchWindow(self):
+        cur.updateKeyword(self.lineEdit_searchBar.text())
         self.sf = searchWindow()
         self.sf.show()
         self.hide()
+    def refresh(self):
+        #cur.updateUser('testUser')
+        self.newWin = MainWindow()
+        self.newWin.show()
+        self.close()
+
 
 #Window that allows existing users to log in to their account
 class LoginWindow(QWidget):
@@ -154,6 +174,8 @@ class LoginWindow(QWidget):
             msg.setText(returnStr)
             msg.exec()
         except:
+            cur.updateUser(currentUser['localId'])
+            #print(cur.getUser())
             msg.setText("Logged In Succesfully")
             msg.exec_()
             msg.hide()
@@ -200,7 +222,9 @@ class RegisterWindow(QWidget):
 
         try:
             user = auth.create_user(email=self.lineEdit_username.text(), password=self.lineEdit_password.text())
-            msg.setText("Account Created Succesfully")
+            currentUser = signin.sign_in_with_email_and_password(email=self.lineEdit_username.text(), password=self.lineEdit_password.text())
+            cur.updateUser(currentUser['localId'])
+            msg.setText("Account Created Succesfully! Add some movies to your watchlist and get started!")
             msg.exec_()
             msg.hide()
             self.hide()
@@ -213,7 +237,7 @@ class RegisterWindow(QWidget):
 class favoritesWindow(QWidget):
     def __init__(self): 
         super().__init__()
-        self.setWindowTitle("My Favorites")
+        self.setWindowTitle("My Watchlist")
         self.resize(1500, 800)
         layout = QGridLayout()
 
@@ -222,7 +246,7 @@ class favoritesWindow(QWidget):
         button_exit.clicked.connect(self.hide)
         layout.addWidget(button_exit, 0, 0)
         
-        userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), "testUser") #Need to get the uid
+        userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), cur.getUser()) #Need to get the uid
 
         self.scroll = QScrollArea()             # Scroll Area which contains the widgets, set as the centralWidget
         self.widget = QWidget()                 # Widget that contains the collection of Vertical Box
@@ -254,27 +278,14 @@ class searchWindow(QWidget):
         button_exit = QPushButton('Return')
         button_exit.clicked.connect(window.show)
         button_exit.clicked.connect(self.hide)
-        layout.addWidget(button_exit, 0, 0)
+        layout.addWidget(button_exit)
 
 
         self.scroll = QScrollArea()             # Scroll Area which contains the widgets, set as the centralWidget
         self.widget = QWidget()                 # Widget that contains the collection of Vertical Box
         self.vbox = QVBoxLayout() 
 
-        label_searchBar = QLabel('<font size="4"> Search: </font>')
-        self.lineEdit_searchBar = QLineEdit()
-        self.lineEdit_searchBar.setPlaceholderText('Enter a keyword')
-        layout.addWidget(label_searchBar, 1, 0)
-        layout.addWidget(self.lineEdit_searchBar, 1, 1)
-
-        button_search = QPushButton('Go!')
-        self.populate("spider-man")
-        #button_search.clicked.connect(self.populate(self.lineEdit_searchBar.text()))
-        #if (self.lineEdit_searchBar.text() != ''):
-            #button_search.clicked.connect(print(self.lineEdit_searchBar.text()))
-
-        
-        layout.addWidget(button_search, 2, 0, 1, 2)
+        self.populate(cur.getKeyword())
 
         self.widget.setLayout(self.vbox)
 
@@ -291,7 +302,7 @@ class searchWindow(QWidget):
     def populate(self, input):
         df = pd.read_csv('data/movies_detailed.csv')
         for ind in df.index:
-            if (input.upper() in df['title'][ind].upper()):
+            if (input.upper() in str(df['plot'][ind]).upper() or input.upper() in str(df['title'][ind]).upper()):
                 widget = customWidgets.movieWidget(df['imdbId'][ind])
                 self.vbox.addWidget(widget)
 
@@ -299,7 +310,7 @@ class searchWindow(QWidget):
   
     
 if __name__ == "__main__":
-    currentUser = NULL
+    #currentData = NULL
     app = QApplication([])
     app.setStyle('Oxygen')
     window = MainWindow()

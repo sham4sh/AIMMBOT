@@ -8,6 +8,8 @@ from PIL import Image
 import requests
 import sys
 from UserDataFirebase import FirestoreDataAccess
+from google.cloud import firestore
+from firebase_admin import credentials
 
 
 class movieWidget(QWidget):
@@ -17,19 +19,21 @@ class movieWidget(QWidget):
         super(movieWidget, self).__init__()
 
         self.is_on = False # Current state (true=ON, false=OFF)
-        title = "Default"
-        im = 'aimmbotlogo.png'
+        self.title = "Hot Tub Time Machine"
+        self.id = 1231587
+        im = 'hottubtimemachine.png'
 
         df = pd.read_csv('data/movies_detailed.csv')
 
         for ind in df.index:
             if (str(name) == str(df['imdbId'][ind])):
-                title = df['title'][ind]
+                self.title = df['title'][ind]
+                self.id = name
                 im = QImage()
                 im.loadFromData(requests.get(df['coverURL'][ind]).content)
 
-        self.lbl = QLabel(title)    #  The widget label
-        self.btn = QPushButton(title)     
+        self.lbl = QLabel(self.title)    #  The widget label
+        self.btn = QPushButton(self.title)     
 
         self.btn.clicked.connect(self.movWin)
         
@@ -51,7 +55,7 @@ class movieWidget(QWidget):
 
     def movWin(self):
         self.win = movieWindow()
-        self.win.fillWindow(1231587)
+        self.win.fillWindow(int(self.id))
         self.win.show()
 
         
@@ -62,11 +66,15 @@ class movieWindow(QWidget):
 
     def __init__(self): 
         super().__init__()
+        #self.db = firestore.Client(credentials=credentials.Certificate("aimmbot-ea206-firebase-adminsdk-wb137-2f8132fd73.json"))
 
         
 
 
-    def activated(Self, index):
+    def activated(self, index):
+        #self.db.collection(u'users').document(cur.getUser()).set({
+        #    self.id : index       
+        #})
         print("Activated index:", index)
     
     def fillWindow(self, imdbId):
@@ -152,6 +160,7 @@ class movieWindow(QWidget):
 
 
 #app = QApplication([])
-#win = movieWindow(1231587)
+#win = movieWindow()
+#win.fillWindow(1231587)
 #win.show()
 #sys.exit(app.exec())
