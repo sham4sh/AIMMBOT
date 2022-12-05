@@ -63,10 +63,10 @@ class MainWindow(QMainWindow):
             widget = customWidgets.movieWidget(str(id))
             containerLayout.addWidget(widget)
 
-        userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), cur.getUser())
-        randMovie = random.choice(list(userFavs.items()))
-        algoTwo = QLabel('<font size="4"> Movies like %s</font>'%randMovie[0])
-        containerLayout.addWidget(algoTwo)
+        #userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), cur.getUser())
+        #randMovie = random.choice(list(userFavs.items()))
+        #algoTwo = QLabel('<font size="4"> Movies like %s</font>'%randMovie[0])
+        #containerLayout.addWidget(algoTwo)
         '''df = pd.read_csv('data/links.csv')
         assert 'movieId' in df.columns and 'imdbId' in df.columns
         ind = df[df['imdbId']==randMovie[0]].index.values
@@ -95,7 +95,6 @@ class MainWindow(QMainWindow):
         tools.addAction("Login", self.logWindow)
         tools.addAction("Register", self.regWindow)
         tools.addAction("My Favorites", self.favWindow)
-        tools.addAction("Search", self.srchWindow)
         tools.addAction("Refresh", self.refresh)
         tools.setMovable(False)
         self.addToolBar(tools)
