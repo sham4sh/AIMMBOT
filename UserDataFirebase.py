@@ -58,4 +58,4 @@ def test():
     values = FDA.removeFav(UID,'1007028')
     values = FDA.addFav(UID,'1007028',4)
 
-test()
+#test()
