@@ -17,19 +17,21 @@ class movieWidget(QWidget):
         super(movieWidget, self).__init__()
 
         self.is_on = False # Current state (true=ON, false=OFF)
-        title = "Default"
-        im = 'aimmbotlogo.png'
+        self.title = "Hot Tub Time Machine"
+        self.id = 1231587
+        im = 'hottubtimemachine.png'
 
         df = pd.read_csv('data/movies_detailed.csv')
 
         for ind in df.index:
             if (str(name) == str(df['imdbId'][ind])):
-                title = df['title'][ind]
+                self.title = df['title'][ind]
+                self.id = name
                 im = QImage()
                 im.loadFromData(requests.get(df['coverURL'][ind]).content)
 
-        self.lbl = QLabel(title)    #  The widget label
-        self.btn = QPushButton(title)     
+        self.lbl = QLabel(self.title)    #  The widget label
+        self.btn = QPushButton(self.title)     
 
         self.btn.clicked.connect(self.movWin)
         
@@ -51,7 +53,7 @@ class movieWidget(QWidget):
 
     def movWin(self):
         self.win = movieWindow()
-        self.win.fillWindow(1231587)
+        self.win.fillWindow(int(self.id))
         self.win.show()
 
         
