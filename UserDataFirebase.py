@@ -30,10 +30,10 @@ class FirestoreDataAccess:
         assert type(userId) == type(movieId) == type("") 
         assert movieId.isdigit() == True
         validAndProcessed = False
-        if type(rating) == float() or type(rating) == int(): # checks if valid input 
+        if type(rating) == type(0.0)or type(rating) == type(1): # checks if valid input 
             if rating>=0.0 and rating<=5.0:
                 doc_ref = self.users_ref.document(userId)
-                doc_ref.set({movieId:rating}, merge=True)
+                doc = doc_ref.set({movieId:rating}, merge=True)
                 #UserCSVData().addFav(userId, movieId, rating)
                 validAndProcessed = True
         return validAndProcessed # returns boolean that tells if the rating is valid and processed 
@@ -42,7 +42,7 @@ class FirestoreDataAccess:
         assert type(userId) == type(movieId) == type("") 
         assert movieId.isdigit() == True
         doc_ref = self.users_ref.document(userId)
-        doc_ref.update({movieId:firestore.DELETE_FIELD}) # if field does not exist nothing happens 
+        doc = doc_ref.update({movieId:firestore.DELETE_FIELD}) # if field does not exist nothing happens 
         #UserCSVData().removeFav(userId, movieId)
         return True
 
@@ -56,6 +56,5 @@ def test():
     if len(values.keys())>0: print(f'getFavsTest - Test 1 passed. output size is {len(values.keys())} and is not empty or null ')
     else: print(f'getFavsTest - Test 1 FAILED . output size is {len(values.keys())}. No dictionary was returned')
     values = FDA.removeFav(UID,'87469')
-    values = FDA.addFav(UID,'87469',4)
 
 #test()
