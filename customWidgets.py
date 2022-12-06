@@ -10,12 +10,15 @@ import sys
 from UserDataFirebase import FirestoreDataAccess
 from google.cloud import firestore
 from firebase_admin import credentials
+import UserDataFirebase
+import currentData
+import firebase_admin
+import random
 
 
 class movieWidget(QWidget):
 
     def __init__(self, name):
-        
         super(movieWidget, self).__init__()
 
         self.is_on = False # Current state (true=ON, false=OFF)
@@ -67,21 +70,27 @@ class movieWindow(QWidget):
     def __init__(self): 
         super().__init__()
         #self.db = firestore.Client(credentials=credentials.Certificate("aimmbot-ea206-firebase-adminsdk-wb137-2f8132fd73.json"))
+        cred = credentials.Certificate("aimmbot-ea206-firebase-adminsdk-wb137-2f8132fd73.json")
+        self.mainApp = firebase_admin.initialize_app(cred, name=str(random.randint(0, 1000)))
+        self.FDA = FirestoreDataAccess(self.mainApp)
 
         
 
 
     def activated(self, index):
-        #self.db.collection(u'users').document(cur.getUser()).set({
-        #    self.id : index       
-        #})
-        print("Activated index:", index)
+
+        values = self.FDA.getFavs(currentData.currentData.getUser(self))
+        if(index == 6):
+            self.FDA.removeFav(currentData.currentData.getUser(self), str(self.id))
+        if(index > 0 and index < 6):
+            values = self.FDA.addFav(currentData.currentData.getUser(self), str(self.id), index)
     
     def fillWindow(self, imdbId):
         title = ''
         url = ''
         plot = ''
         year = ''
+        self.id = imdbId
 
         df = pd.read_csv('data/movies_detailed.csv')
         for ind in df.index:

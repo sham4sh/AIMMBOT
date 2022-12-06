@@ -20,7 +20,7 @@ class FirestoreDataAccess:
         doc_ref = self.users_ref.document(userId)
         doc = doc_ref.get()
         if doc.exists:
-            print(f'Document data: {doc.to_dict()}')
+            #print(f'Document data: {doc.to_dict()}')
             favsDict = doc.to_dict()
         else:
             print(u'No such document!')
@@ -55,7 +55,7 @@ def test():
     values = FDA.getFavs(UID)
     if len(values.keys())>0: print(f'getFavsTest - Test 1 passed. output size is {len(values.keys())} and is not empty or null ')
     else: print(f'getFavsTest - Test 1 FAILED . output size is {len(values.keys())}. No dictionary was returned')
-    values = FDA.removeFav(UID,'1007028')
+    #values = FDA.removeFav(UID,'1007028')
     values = FDA.addFav(UID,'1007028',4)
 
 #test()
