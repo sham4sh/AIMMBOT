@@ -4,10 +4,7 @@ from asyncio.windows_events import NULL
 from sqlite3 import Cursor
 import sys
 import requests
-import json
 import signin
-import keywordSearch
-import pprint
 import random
 from PyQt5.QtWidgets import (QApplication, QScrollArea, QLabel, QVBoxLayout, QMainWindow, QStatusBar, QToolBar, QLineEdit, QGridLayout, QWidget, QPushButton, QMessageBox, QHBoxLayout, QComboBox)
 from PyQt5.QtGui import QPixmap, QFont, QImage
@@ -16,7 +13,6 @@ import pandas as pd
 import numpy as np
 import firebase_admin
 from algorithms.primaryAlgorithm import (PrimaryAlgorithm)
-from algorithms.secondaryAlgorithm import (SecondaryAlgorithm)
 from UserDataFirebase import FirestoreDataAccess
 from Cinemagoer import CinemagoerMovie
 from firebase_admin import credentials
@@ -60,21 +56,6 @@ class MainWindow(QMainWindow):
             id = movie.item()
             widget = movieWidget(str(id))
             containerLayout.addWidget(widget)
-
-        #userFavs = FirestoreDataAccess.getFavs(FirestoreDataAccess(app=mainApp), cur.getUser())
-        #randMovie = random.choice(list(userFavs.items()))
-        #algoTwo = QLabel('<font size="4"> Movies like %s</font>'%randMovie[0])
-        #containerLayout.addWidget(algoTwo)
-        '''df = pd.read_csv('data/links.csv')
-        assert 'movieId' in df.columns and 'imdbId' in df.columns
-        ind = df[df['imdbId']==randMovie[0]].index.values
-        mid = df.loc[ind,'movieId'].values[1]
-        a2 = SecondaryAlgorithm()
-        a2Recommends = a2.get_top_n(mid)
-        for movie in a2Recommends:
-            widget = customWidgets.movieWidget(str(movie))             
-            containerLayout.addWidget(widget)'''
-
     
         container.setLayout(containerLayout)
 
@@ -456,7 +437,6 @@ class movieWindow(QWidget):
   
     
 if __name__ == "__main__":
-    #currentData = NULL
     app = QApplication([])
     app.setStyle('Oxygen')
     window = MainWindow()
